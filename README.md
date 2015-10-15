@@ -1,13 +1,16 @@
 # MATLAB Fall 2014 – Research Plan (Template)
 (text between brackets to be removed)
 
-> * Group Name: (be creative!)
-> * Group participants names: (alphabetically sorted by last name)
+> * Group Name: AntsInThePants
+> * Group participants names:	Hasler, Florian
+								Heinzmann, Matthias
+								Urech, Andreas
+								Werner, Dominik
 > * Project Title: Dessert Ant Adaptive Orientation
 
 ## General Introduction
 
-(States your motivation clearly: why is it important / interesting to solve this problem?)
+The Dessert Ant (Cataglyphis) is an interesting creature. It lives in d
 (Add real-world examples, if any)
 (Put the problem into a historical context, from what does it originate? Are there already some proposed solutions?)
 
