@@ -32,15 +32,15 @@ Extensions we may implement during our project:
 At the end of this project we want to have a model which is able to simulate realistic desert ant behavior in a variable setup. If this should not be possible we want to be able to tell which factors make such a model difficult to implemet and how it could probably be achieved after all.
 Core questions will be:
 > * Is the model accurate, therefore do the walking patterns that we've simulated match the empirical ones?
-> ** Do they match in length?
-> ** Do they match in directions?
-> ** Do they match in distribution?
-> ** How does the memory effect the path pattern?
-> ** Also, do the decisions which the ants learned make sense?
+>  * Do they match in length?
+>  * Do they match in directions?
+>  * Do they match in distribution?
+>  * How does the memory effect the path pattern?
+>  * Also, do the decisions which the ants learned make sense?
 > * Are we able to predict what happens if we alter the environment? (depends on the question beforehand)
-> ** Can the ants survive if we rid the environment completely of any landmarks?
-> ** Can the ants survive if the landmarks constantly change?
-> ** Can the ants survive if temperature would increase (pheromones will last shorter, ants have to come back to the nest faster)?
+>  * Can the ants survive if we rid the environment completely of any landmarks?
+>  * Can the ants survive if the landmarks constantly change?
+>  * Can the ants survive if temperature would increase (pheromones will last shorter, ants have to come back to the nest faster)?
 
 As indicators of survival and the other parameters we can use the success-funciton as well as the agent properties that belong to our model.
 
@@ -49,14 +49,14 @@ As indicators of survival and the other parameters we can use the success-funcit
 The article we base our work upon does state that its conditions might be flawd in some ways. The provided experimental data however looks promising so we expect:
 
 > * That the patterns should be produced in a similar way as in the experiments. Therefore:
-> ** That the lengths of the paths match with the real ones.
-> ** That the directions of the paths are chosen as in reality.
-> ** That the ants distribute themselves reasonable among the food sources.
-> ** That the implemented memory causes the ants to extend the search radius once a food source has run out. This means the ant should look for new sources starting from the old source.
-> ** That the ants can switch to another method of navigation should the need arise?
+>  * That the lengths of the paths match with the real ones.
+>  * That the directions of the paths are chosen as in reality.
+>  * That the ants distribute themselves reasonable among the food sources.
+>  * That the implemented memory causes the ants to extend the search radius once a food source has run out. This means the ant should look for new sources starting from the old source.
+>  * That the ants can switch to another method of navigation should the need arise?
 > * That the ants behavior becomes predictable. Therefore:
-> ** That ants can survive if landmak navigation is impossible by using the other 2 methods.
-> ** That ants can survive even if the conditions of their environment gets harsher provided they have enough resources in their proximity.
+>  * That ants can survive if landmak navigation is impossible by using the other 2 methods.
+>  * That ants can survive even if the conditions of their environment gets harsher provided they have enough resources in their proximity.
 
 ## References 
 
