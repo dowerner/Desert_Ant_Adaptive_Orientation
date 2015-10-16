@@ -1,0 +1,97 @@
+\documentclass[11pt,a4paper]{scrartcl}
+\setkomafont{sectioning}{\bfseries}				%Macht Titel in die gleiche Schriftart wie Haupttext
+\usepackage[left=2.5cm,right=2.5cm,top=2cm,bottom=1.7cm,includeheadfoot]{geometry}  	%Einstellung der Seitenränder
+\usepackage[utf8]{inputenc}						%Macht Umlaute sichtbar
+\usepackage[german]{babel}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{wrapfig}								%Texfluss um Bilder
+\usepackage{amsmath,amstext,amssymb}       	 		%Math.Symbole
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{framed}							%Rahmen
+\setlength\parindent{0pt} 					%kein Einrücken
+\sloppy										%Latex probiert im Blocksatz zu bleiben
+\usepackage{blindtext}
+\usepackage{todonotes}						%Ermöglicht do-to Bemerkungen
+\usepackage{listings}			
+\setlength{\leftmargini}{0pt}				 % Macht bei Description den Einzug immer ganz links
+
+%-----------------------------------------------opening-----------------------------------------------
+\title{MATLAB Fall 2014 – Research Plan}
+\date{}
+\author{Dessert Ant Adaptive Navigation}
+%-----------------------------------------------Dokument-----------------------------------------------
+\begin{document}
+\maketitle
+\begin{description}
+\item[Groupname:] AntsInThePants
+\item [Group participants:] Florian Hasler, Matthias Heinzmann, Andreas Urech,Dominik Werner
+\item [GitHub: ] \url{ https://github.com/dowerner/Desert_Ant_Adaptive_Orientation}
+\item[Project Title:] Dessert Ant Adaptive Navigation
+\end{description}
+\section*{General Introduction}
+The Desert Ant (Cataglyphis) is an interesting creature. It lives in the desert where conditions are very harsh. Since the ant will die if it remains outside its nest for too long it will die because of the hot sand it crawls on. It is vital for the ants survival that it has a sophisticated way to navigate through the pans of sand that make out most of its habitat. Since the early 20th century biologists have been fascinated by this ant and its navigation through the desert. Recently there has been speculation about the methods that are utilized by these ants to navigate between sources of food and their nest. If we could reproduce the path-pattern observed by real ants with a model we would be able to predict how they would react if something would change in their ecosystem.
+We will base our work upon an essay written by R. Wehner with the title "Desert ant navigation: how miniature brains solve complex tasks". In this essay he suggests 3 methods of navigation which the ants can use, namely path integration, pheromones and visual landmark recognition. In his final conclusion he considers all 3 methods important and assumes that the ant has a way of adopting the priority of each mechanism according to the current situation.
+In Previous years a group called gordonteam already implemented a model based on the before mentioned article. In the report they noted that their path integration did not work and that they were not able to combine all 3 methods. Our plan is to extend upon their work and fix the problems as well as to bind all 3 methods together. Furthermore we want to implement a memory system along with a learning machine which will allow the ant to dynamically adapt to an environment.
+
+\section*{The Model}
+For our simulation we will use an agent based model where every agent will be representing an ant. To be able to compare our model with the real world data we have to keep track of several different variables:
+\begin{description}
+\item[nestLocation:] This is a 2D vector which indicates the position of the nest inside a sand pan.
+\item[foodSourceLocation(s): ]These 2D vectors symbolize the location of a food source which the ant will have to travel to. It should be possible to implement an ephemeral (non-renewable) food source so the ant has to look for a new one if the first does not yield food anymore.
+\item[pheromoneParticles: ]Objects that represent pheromone particles with a specific lifetime. These pheromones can be produced by ants.
+\item [ants: ]The agents themselves who contain their position data and other information to track the simulation.
+\item[landmarks:]Objects that symbolize visual orientation points for the ants.
+\end{description}
+ 
+\section*{Fundamental Questions}
+At the end of this project we want to have a model which is able to simulate realistic desert ant behavior in a variable setup. If this should not be possible we want to be able to tell which factors make such a model difficult to implement and how it could probably be achieved after all.
+Core questions will be:
+\begin{itemize}
+\item Is the model accurate, therefore do the walking patterns that we've simulated match the empirical ones?
+\item Do they match in length?
+\item Do they match in directions?
+\item Do they match in distribution?
+\item How does the memory effect the path pattern?
+\item Also, do the decisions which the ants learned make sense?
+\item Are we able to predict what happens if we alter the environment? (depends on the question beforehand)
+\item Can the ants survive if we rid the environment completely of any landmarks?
+\item Can the ants survive if the landmarks constantly change?
+\item Can the ants survive if temperature would increase (pheromones will last shorter, ants have to come back to the nest faster)? 
+\end{itemize}
+As indicators of survival and the other parameters we can use the success-funciton as well as the agent properties that belong to our model.
+\section*{Expected Results}
+
+The article we base our work upon does state that its conditions might be flawed in some ways. The provided experimental data however looks promising so we expect:
+\begin{itemize}
+\item That the patterns should be produced in a similar way as in the experiments. Therefore:
+\item That the lengths of the paths match with the real ones.
+\item That the directions of the paths are chosen as in reality.
+\item That the ants distribute themselves reasonable among the food sources.
+\item That the implemented memory causes the ants to extend the search radius once a food source has run out. This means the ant should look for new sources starting from the old source.
+\item That the ants can switch to another method of navigation should the need arise?
+\item That the ants behavior becomes predictable. Therefore:
+\item That ants can survive if landmark navigation is impossible by using the other 2 methods.
+\item That ants can survive even if the conditions of their environment gets harsher provided they have enough resources in their proximity.
+\end{itemize}
+
+\section*{References }
+For this project we will use the following references:
+\begin{itemize}
+\item "Desert ant navigation: how miniature brains solve complex tasks" by R. Wehner
+\item "Path integration in desert ants, Cataglyphis fortis" by M. Müller and R. Wehner
+\end{itemize}
+
+We will start off our project on the work of $gordonteam$. They have worked on the subject and came up with a model which does not take into account the afore mentioned changes we intend to implement. Also we will try to fix their path integrator which they could not get working during the project.
+
+project of gordonteam: \url{ https://github.com/msssm/desert_ant_behavior_gordonteam}
+
+
+
+
+\section*{Research Methods}
+Agent-Based Model
+\end{document}
