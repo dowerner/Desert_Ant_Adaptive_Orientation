@@ -1,4 +1,4 @@
-# MATLAB Fall 2014 – Research Plan
+# MATLAB Fall 2015 – Research Plan
 
 > * Group Name: AntsInThePants
 > * Group participants names: Hasler, Florian; Heinzmann, Matthias; Urech, Andreas; Werner, Dominik
