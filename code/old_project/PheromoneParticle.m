@@ -56,7 +56,7 @@ classdef PheromoneParticle
         % behaviour. tc is the decay constant: smaller it is, faster the
         % particles decay.
         function this = decay(this,dt)
-            tc = -log(0.5)/20*this.decayTime*60;
+            tc = -log(0.5)/20*this.disappearTime*60;
             this.intensity = this.intensity*exp((log(1/2)/tc)*dt);
         end
     end
