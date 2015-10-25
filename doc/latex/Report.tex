@@ -13,6 +13,25 @@
 %\author{Name 1, Name 2}
 %\date{date} 
 
+
+
+
+%Additinal packages ants in the pants
+
+\usepackage[]{algorithm2e}
+\usepackage{todonotes}
+\usepackage[german]{babel}
+\usepackage[utf8]{inputenc}	
+
+
+
+
+
+
+
+
+
+
 \begin{document}
 
 
@@ -104,9 +123,86 @@
 
 
 \section{Abstract}
+The Desert Ant (Cataglyphis) is an interesting creature. It lives in the desert where conditions are very harsh. Being to long outside of its nest the ant will die due to the ambient heat, therefore it is more than vital for the ant's survival that it has a sophisticated way to navigate through the pans of sand that make out most of its habitat. Since the early 20th century biologists have been fascinated by this ant and its navigation through the desert. Recently there has been speculation about the methods that are utilized by these ants to navigate between sources of food and their nest. If we could reproduce the path-pattern observed by real ants with a model we would be able to predict how they would react if something would change in their ecosystem.
+We will base our work upon an essay written by R. Wehner \footnote{Wehner1988\cite{xxx}, Wehner2002\cite{yyy},Wehner1998\cite{zzz}}
+ with the title "Desert ant navigation: how miniature brains solve complex tasks". In this essay he suggests 3 methods of navigation which the ants can use, namely path integration, pheromones and visual landmark recognition. In his final conclusion he considers all 3 methods important and assumes that the ant has a way of adopting the priority of each mechanism according to the current situation.
+In Previous years a group called gordonteam already implemented a model based on the before mentioned article. In the report they noted that their path integration did not work and that they were not able to combine all 3 methods. Our plan is to extend upon their work and fix the problems as well as to bind all 3 methods together. Furthermore we want to implement a memory system along with a learning machine which will allow the ant to dynamically adapt to an environment.
 
+
+
+
+\newpage
 \section{Individual contributions}
+\subsection{Orientation}
+As mentioned the desert ant's main means of orientation are:
+\begin{itemize}
+\item pathintegration
+\item local landmark orientation
+\item pheromones
+\end{itemize}
+The pathintegration and the local landmark orientation are primarily used in order to get back to the nest from a food source, whereas the orientation by pheromones is mainly used to find a prelocated food source. \todo{in an educated guess check. Email an R. Wehner.}
 
+\subsubsection{Pathintegration}
+No matter the zig-zag way out of its nest, the ant is able to return in a more or less straight line. This remarkable ability is reached by pathintegration. The ant iteratively computes the mean of all its turning angles executed and is therefore always aware in which direction its nest is located. These calculations are executed with imperfections which accumulate with growing distance. In extreme cases pathintegration causes the ant to miss its nest and other means of orientation are necessary. \\
+In\footnote{Page 5288 (Neurobioligy 1988) \cite{xxx}} the following formulas have been derived, they take account the rough approximation of the ants pathintegration. 
+\begin{align*}
+\varphi_{n+1} =& \varphi +k \cdot \frac{(180^{\circ} + \delta)\cdot(180^{\circ} - \delta)\cdot\delta}{l_{n}} \\
+l_{n+1} =& l_{n}+ 1 - \frac{\delta}{90^{\circ}}
+\end{align*}
+\begin{tabbing}
+\hspace{1cm}\=\kill
+$l_{n}:$ \> current distance (in unitlength) to the nest \\ 
+$\varphi_{n}:$ \> current angle that points backwards to the nest \\ 
+$k:$ \>  normalization factor\\ 
+$\delta:$ \>  executed angle\\ 
+\end{tabbing} 
+$l$ and $\varphi$ are constantly updated and together they form the \textit{global vector}.
+
+
+\todo{damit nicht grösser als 90} 
+\subsubsection{Local landmark orientation }
+The ants can make use of landmark orientations. They can recreate a certain route by memorizing given landmarks in the correct sequence.
+
+\subsubsection{Combination}
+It is not that the various means of orientations are combined in a weighted fashion. Given certain criteria the different means are used separately.\\
+The results gained R. Wehner's experiments indicate that ants use predominantly pathintegration, but if available using local landmarks is more preferable to using the global vector-navigation via pathintegration. It has been concluded that the ant transiently inhibits the global vector when being in familiar territory. The local vector only reemerges after the local vector ceases. Whilst navigating via the local vector the global vector is continuously updated.
+\\ \
+
+\begin{algorithm}[H]
+
+ \While{not at nest}{ 
+ secrete pheromones; \\
+ execute global vector;\\
+ update global vector;
+ 
+  \If{local vector recognised}{
+   		\While{local vector $ > 0$}{
+   		 execute local vector\;
+   		 update local vector\;
+   		 update global vector;
+   			}
+		}
+}
+ \caption{Combintation of Orientation}
+\end{algorithm}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\newpage
 \section{Introduction and Motivations}
 
 \section{Description of the Model}
