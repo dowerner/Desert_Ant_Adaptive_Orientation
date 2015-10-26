@@ -132,7 +132,7 @@ The pathintegration and the local landmark orientation are primarily used in ord
 
 \subsubsection{Pathintegration}
 No matter the zig-zag way out of its nest, the ant is able to return in a more or less straight line. This remarkable ability is reached by pathintegration. The ant iteratively computes the mean of all its turning angles executed and is therefore always aware in which direction its nest is located. These calculations are executed with imperfections which accumulate with growing distance. In extreme cases pathintegration causes the ant to miss its nest and other means of orientation are necessary. \\
-In\footnote{Wehner1988\cite{Wehner1988} Page 5288} the following formulas have been derived, they take into account the rough approximation of the ants pathintegration. 
+In Wehner1988\cite{Wehner1988}\footnote{on page 5288} the following formulas have been derived, they take into account the rough approximation of the ants pathintegration. 
 \begin{align*}
 \varphi_{n+1} =& \varphi +k \cdot \frac{(180^{\circ} + \delta)\cdot(180^{\circ} - \delta)\cdot\delta}{l_{n}} \\
 l_{n+1} =& l_{n}+ 1 - \frac{\delta}{90^{\circ}}
@@ -150,7 +150,7 @@ $l$ and $\varphi$ are constantly updated and together they form the \textit{glob
 The ants can make use of landmark orientations. They can recreate a certain route by memorizing given landmarks in the correct sequence.
 
 \subsubsection{Pheromone orientation}
-Having found a food source the secretion becomes more intense. Other ants are attracted to the pheromones of their conspecifics and are therefore guided to the foodsource and thereby pheromone trace is further augmented. Once the foodsource is depleted the ants fan out and the pheromone evaporates exponentially \footnote{GordonTeam2008 \cite{GordonTeam2008} Page 9}.
+Having found a food source the secretion becomes more intense. Other ants are attracted to the pheromones of their conspecifics and are therefore guided to the foodsource and thereby pheromone trace is further augmented. Once the foodsource is depleted the ants fan out and the pheromone evaporates exponentially GordonTeam2008\cite{GordonTeam2008} \footnote{on page 9}.
 
  \begin{align*}
  I(t)=I(t - \Delta t) \exp (\frac{\log (\frac{1}{2}) \Delta  t}{t_{c}})\Delta t 
