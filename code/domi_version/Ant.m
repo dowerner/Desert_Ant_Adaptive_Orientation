@@ -130,7 +130,7 @@ classdef Ant
         end
         
         function this = followPheromonePath(this,ground,dt)
-            [bool particle] = ground.hasPheromoneInLocation(this.location);
+            [bool, particle] = ground.hasPheromoneInLocation(this.location);
             if bool
                 if this.carryingFood
                     this.prevLocation = this.location;
@@ -362,6 +362,16 @@ classdef Ant
                         this = this.randomWalkStep(ground,dt);
                     end
                 end
+            end
+        end
+        
+        % Navigate using path integrator
+        % HAS TO BE IMPLEMENTED PROPERLY
+        function this = navigateUsingPathIntegrator(this, ground, dt)
+            if strcmp(this.lookingFor,'food')
+                this = this.stepStraightTo(ground.foodSourceLocation,dt);
+            elseif strcmp(this.lookingFor,'nest')
+                this = this.stepStraightTo(ground.nestLocation,dt);
             end
         end
         

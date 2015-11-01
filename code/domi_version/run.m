@@ -29,19 +29,28 @@ while(currentPrint ==1 || ant.location(1) >= 0)
     ant.velocityVector(1:2) = ant.velocityVector(1:2)./norm(ant.velocityVector(1:2));
     ant.pathDirection = ant.velocityVector(1:2);
     ground = ant.releasePheromone(ground);
-    test = ant.location;
-    if ant.carryingFood
-
-        ant.carryingFood = false;
-    end
-    if norm(ant.location-foodSourceLocation) < eps
+    
+    % pickup food and set nest as target
+    if strcmp(ant.lookingFor, 'food') && norm(ant.location-foodSourceLocation) < eps
         plot_title = 'returning to nest.';
+        ant.carryingFood = true;
+        ant.lookingFor = 'nest';
     end
-    ant = ant.lookForSomething(ground,dt);
-    if ground.isLocationAtFoodSource(ant.location)
-        ant.carryingFood = 1;        
+    
+    % pickup food and set nest as target
+    if strcmp(ant.lookingFor, 'nest') && norm(ant.location-nestLocation) < eps
+        plot_title = 'looking for food.';
+        ant.carryingFood = false;
+        ant.lookingFor = 'food';
     end
-    ant = ant.updateGlobalVector(dt);
+    
+    if strcmp(ant.lookingFor, 'food')
+        ant = ant.followPheromonePath(ground,dt);
+        ant = ant.lookForSomething(ground,dt);
+    elseif strcmp(ant.lookingFor, 'nest')
+        ant = ant.navigateUsingPathIntegrator(ground,dt);
+    end
+    
     ground.ants(1) = ant;
     cla;
     hold on;
