@@ -192,16 +192,17 @@ classdef Ant
             % Needed by the first step
             if isnan(vector2angle(oldDir))
                 delta = 0;
+                this.phi=vector2angle(v);
             else
-                delta = vector2angle([0;1])-vector2angle(v);
+                delta = vector2angle(v)-this.phi;
             end
             %this.phi = (this.l*this.phi+delta+this.phi*currentL)/(this.l+currentL);
             if this.l ~= 0
-                this.phi = this.phi+k*(pi+delta)*(pi-delta)*delta/this.l;
+                this.phi = this.phi+k*(pi+delta)*(pi-delta)*delta/this.l*currentL;
             end
-            this.l = this.l + currentL - delta/pi*currentL;
+            this.l = this.l + currentL - abs(delta)/pi*2*currentL;
             if ~this.goingToNestDirectly
-                this.globalVector = [sin(this.phi) ; cos(this.phi)]*this.l;
+                this.globalVector = [cos(this.phi) ; sin(this.phi)]*this.l;
             end
         end
         

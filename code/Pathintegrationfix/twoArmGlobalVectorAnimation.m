@@ -23,7 +23,7 @@ ant = Ant;
 ant = ant.setUp(ground);
 ant.velocityVector(1:2) = [0;1];
 ground.ants = ant;
-
+ant.phi=pi/2; %cheating
 target = nodeLocation;
 currentPrint = 1;
 while(currentPrint ==1 || ant.location(2) >= 0)
@@ -44,18 +44,18 @@ while(currentPrint ==1 || ant.location(2) >= 0)
     end
     ant = ant.updateGlobalVector(dt,k);
     ground.ants(1) = ant;
-   % cla;
-    %hold on;
-    %minv = min([nestLocation foodSourceLocation nodeLocation]');
-    %maxv = max([nestLocation foodSourceLocation nodeLocation]');
-    %axis([minv(1)-2 maxv(1)+2 minv(2)-2 maxv(2)+2]);
-    %title('Path integration');
-    %xlabel('length [m]');
-    %ylabel('length [m]');
-    %plot(nodeLocation(1),nodeLocation(2),'bo');
-    %plot(ant.globalVector(1),ant.globalVector(2),'bo');
-    %ground = updateGround(ground,currentPrint,dt,printFlag);
-    %drawnow;
+   cla;
+    hold on;
+    minv = min([nestLocation foodSourceLocation nodeLocation]');
+    maxv = max([nestLocation foodSourceLocation nodeLocation]');
+    axis([minv(1)-2 maxv(1)+2 minv(2)-2 maxv(2)+2]);
+    title('Path integration');
+    xlabel('length [m]');
+    ylabel('length [m]');
+    plot(nodeLocation(1),nodeLocation(2),'bo');
+    plot(ant.globalVector(1)+1,ant.globalVector(2)+1,'bo');
+    ground = updateGround(ground,currentPrint,dt,printFlag);
+    drawnow;
     currentPrint = currentPrint+1;
     if currentPrint > 500
         break

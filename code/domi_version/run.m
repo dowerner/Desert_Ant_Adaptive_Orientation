@@ -4,7 +4,7 @@ if nargin == 0
     printFlag = false;
 end
 
-nestLocation = [1;0];
+nestLocation = [0;0];
 foodSourceLocation = [3;6];
 
 ground = Ground;
@@ -19,7 +19,7 @@ ant = Ant;
 ant = ant.setUp(ground);
 ant.velocityVector(1:2) = [0;1];
 ground.ants = ant;
-
+ant.setUp(ground);
 eps = 0.01;
 
 plot_title = 'looking for food';
@@ -45,7 +45,7 @@ while(currentPrint ==1 || ant.location(1) >= 0)
     end
     
     if strcmp(ant.lookingFor, 'food')
-        ant = ant.followPheromonePath(ground,dt);
+        
         ant = ant.lookForSomething(ground,dt);
     elseif strcmp(ant.lookingFor, 'nest')
         ant = ant.navigateUsingPathIntegrator(ground,dt);
@@ -63,7 +63,12 @@ while(currentPrint ==1 || ant.location(1) >= 0)
     %plot(nodeLocation(1),nodeLocation(2),'bo');
     ground = updateGround(ground,currentPrint,dt,printFlag);
     drawnow;
+    plot(ant.globalVector(1),ant.globalVector(2),'bo');
+    ant.globalVector
+    ant.l
+    ant.phi
     %currentPrint = currentPrint+1;
+    ant = ant.updateGlobalVector(dt);
     if currentPrint > 1000
         break
     end

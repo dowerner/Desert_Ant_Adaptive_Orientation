@@ -2,7 +2,7 @@ lengthArm1 = 10;
 lengthArm2 = 5;
 dt = 1;
 printFlag = false;
-k=4*10^(-3);
+k=4*10^(-5)*(360/(2*pi))^2;
 
 N=18;
 error=zeros(N+1);

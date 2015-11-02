@@ -32,6 +32,8 @@ classdef Ant
         storedLandmarksMap % A map from a landmark pattern to a 
                            % local angle to follow.
         lookingFor % String witch says what the ant is looking for.
+        
+        startangle % angle with ant leaves the nest
     end
     
     %-- NOTE: the non static methods requires always an argument.
@@ -50,45 +52,7 @@ classdef Ant
             end
         end
         
-        % Main behaviour, simply call this at each step.
-        % It does all the things an ant should do automatically.
-        function [this ground] = performCompleteStep(this,ground,dt)
-            % normalize the velocity vector
-            v = this.velocityVector(1:2);
-            v = v./norm(v);
-            this.velocityVector(1:2) = v;
-            % end
-            this.pathDirection = this.location-this.prevLocation;
-            ground = this.releasePheromone(ground);
-            if ~isempty(this.problemEncountered)
-                this = this.problemHandler(ground,dt);
-            elseif ~isempty(this.lookingFor)
-                if norm(this.location-ground.nestLocation) == 0 && ...
-                   strcmp(this.lookingFor,'nest')
-                    this.lookingFor = '';
-                    return;
-                elseif norm(this.location-ground.foodSourceLocation) == 0 && ...
-                       strcmp(this.lookingFor,'food')
-                    this.lookingFor = '';
-                    return;
-                end
-                this = this.lookForSomething(ground,dt);
-            else
-                if ground.isLocationAtNest(this.location)
-                    this.carryingFood = 0;
-                    this.followingPheromonePath = 1;
-                    this = this.stepBack;
-                elseif ground.isLocationAtFoodSource(this.location)
-                    this.carryingFood = 1;
-                    this.goingToNestDirectly = true;
-                    this.lookingFor = 'nest';
-                    this = this.backToNestDirectly(ground,dt);
-                elseif this.followingPheromonePath
-                    this = this.followPheromonePath(ground);
-                end
-            end
-            this = this.updateGlobalVector(dt);     
-        end
+
         
         % This method update the location of the ant using velocity vector
         % information
@@ -180,6 +144,7 @@ classdef Ant
         
         % This method updates the global vector after the ant moved.
         function this = updateGlobalVector(this,dt)
+            k=4*3*10^(-3);
             v = this.location-this.prevLocation;
             currentL = norm(v);
             % Implementation using the global vector variable
@@ -191,16 +156,15 @@ classdef Ant
             if isnan(vector2angle(oldDir))
                 delta = 0;
             else
-                delta = vector2angle(v)-vector2angle(oldDir);
+                delta = this.startangle-vector2angle(v);
             end
             %this.phi = (this.l*this.phi+delta+this.phi*currentL)/(this.l+currentL);
             if this.l ~= 0
-                this.phi = this.phi+4e-2*(pi+delta)*(pi-delta)*delta/this.l;
+                this.phi = this.phi+k*(pi+delta)*(pi-delta)*delta/this.l;
             end
-            this.l = this.l + currentL - delta/pi*2*currentL;
+            this.l = this.l + currentL - delta/pi*currentL;
             if ~this.goingToNestDirectly
-                this.globalVector = -[cos(this.phi) -sin(this.phi);
-                                 sin(this.phi) cos(this.phi)]*v;
+                this.globalVector = [cos(this.phi) ; sin(this.phi)]*this.l;
             end
         end
         
@@ -371,7 +335,8 @@ classdef Ant
             if strcmp(this.lookingFor,'food')
                 this = this.stepStraightTo(ground.foodSourceLocation,dt);
             elseif strcmp(this.lookingFor,'nest')
-                this = this.stepStraightTo(ground.nestLocation,dt);
+                this = this.stepStraightTo(this.location+this.globalVector,dt);
+                
             end
         end
         
@@ -408,6 +373,8 @@ classdef Ant
             v = ([rand;rand]).*2-1;
             v = v./norm(v);
             v = [v;0.125];
+            this.startangle=vector2angle(v);
+            thi.phi=vector2angle(v);
             this.velocityVector = v;
             this.carryingFood = 0;
             this.followingPheromonePath = 0;
