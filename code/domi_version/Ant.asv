@@ -145,7 +145,6 @@ classdef Ant
         % This method updates the global vector after the ant moved.
         function this = updateGlobalVector(this,dt)
             k=4*10^(-5)*(360/(2*pi))^2; % fitting constant from paper transformed to radians
-            eps = 1e-6;
             v = this.location-this.prevLocation;
             currentL = norm(v);
             % Implementation using the global vector variable
@@ -161,13 +160,15 @@ classdef Ant
                 delta = vector2angle(v)-this.phi;
             end
             %this.phi = (this.l*this.phi+delta+this.phi*currentL)/(this.l+currentL);
-            if abs(this.l) > eps
+            if this.l ~= 0
                 this.phi = this.phi+k*(pi+delta)*(pi-delta)*delta/this.l*currentL;
             end
             this.l = this.l + currentL - abs(delta)/pi*2*currentL;
             if ~this.goingToNestDirectly
                 this.globalVector = [cos(this.phi) ; sin(this.phi)]*this.l;
             end
+            
+            if this.Phi
         end
         
         % This method tries to recognize a landmark, checking in the

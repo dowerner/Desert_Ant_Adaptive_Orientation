@@ -4,7 +4,7 @@ dt = 1;
 printFlag = false;
 k=4*10^(-5)*(360/(2*pi))^2;
 
-N=18;
+N=36;
 error=zeros(N+1);
 angle= zeros(N+1);
 for ii=0:N

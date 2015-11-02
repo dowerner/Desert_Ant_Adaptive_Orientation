@@ -22,7 +22,7 @@ ground.ants = ant;
 ant.setUp(ground);
 eps = 0.01;
 
-ant.phi = vector2angle(ant.velocityVector); %cheating
+ant.phi = ant.velocityVector; %cheating
 
 plot_title = 'looking for food';
 
