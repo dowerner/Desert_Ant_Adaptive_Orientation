@@ -1,4 +1,4 @@
-function error=twoArmGlobalVectorAnimation(alpha,lengthArm1,lengthArm2,dt,printFlag)
+function error=twoArmGlobalVectorAnimation(alpha,lengthArm1,lengthArm2,dt,printFlag,k)
 if nargin == 0
     alpha = deg2rad(120);
     lengthArm1 = 10;
@@ -31,7 +31,7 @@ while(currentPrint ==1 || ant.location(2) >= 0)
     ant.pathDirection = ant.velocityVector(1:2);
     ground = ant.releasePheromone(ground);
     if ant.carryingFood
-        target = (ant.globalVector./norm(ant.globalVector)).*ant.l;
+        target = foodSourceLocation - ant.globalVector;
         error = abs(vector2angle(ant.location)-vector2angle(ant.globalVector));
         break
         ant.carryingFood = false;
@@ -42,9 +42,9 @@ while(currentPrint ==1 || ant.location(2) >= 0)
     if ground.isLocationAtFoodSource(ant.location)
         ant.carryingFood = 1;        
     end
-    ant = ant.updateGlobalVector(dt);
+    ant = ant.updateGlobalVector(dt,k);
     ground.ants(1) = ant;
-    %cla;
+   % cla;
     %hold on;
     %minv = min([nestLocation foodSourceLocation nodeLocation]');
     %maxv = max([nestLocation foodSourceLocation nodeLocation]');
@@ -53,6 +53,7 @@ while(currentPrint ==1 || ant.location(2) >= 0)
     %xlabel('length [m]');
     %ylabel('length [m]');
     %plot(nodeLocation(1),nodeLocation(2),'bo');
+    %plot(ant.globalVector(1),ant.globalVector(2),'bo');
     %ground = updateGround(ground,currentPrint,dt,printFlag);
     %drawnow;
     currentPrint = currentPrint+1;

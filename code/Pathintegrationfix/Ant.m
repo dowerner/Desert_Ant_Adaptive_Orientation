@@ -181,7 +181,7 @@ classdef Ant
         end
         
         % This method updates the global vector after the ant moved.
-        function this = updateGlobalVector(this,dt)
+        function this = updateGlobalVector(this,dt,k)
             v = this.location-this.prevLocation;
             currentL = norm(v);
             % Implementation using the global vector variable
@@ -197,9 +197,9 @@ classdef Ant
             end
             %this.phi = (this.l*this.phi+delta+this.phi*currentL)/(this.l+currentL);
             if this.l ~= 0
-                this.phi = this.phi+4e-5*(pi+delta)*(pi-delta)*delta/this.l;
+                this.phi = this.phi+k*(pi+delta)*(pi-delta)*delta/this.l;
             end
-            this.l = this.l + currentL - delta/pi*2*currentL;
+            this.l = this.l + currentL - delta/pi*currentL;
             if ~this.goingToNestDirectly
                 this.globalVector = [sin(this.phi) ; cos(this.phi)]*this.l;
             end
