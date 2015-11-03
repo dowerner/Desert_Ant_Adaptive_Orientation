@@ -34,6 +34,9 @@ classdef Ant
         lookingFor % String witch says what the ant is looking for.
         
         startangle % angle with ant leaves the nest
+        
+        previousPhi
+        previousGlobalVector
     end
     
     %-- NOTE: the non static methods requires always an argument.
@@ -143,8 +146,12 @@ classdef Ant
         end
         
         % This method updates the global vector after the ant moved.
-        function this = updateGlobalVector(this,dt)
+        function this = updateGlobalVector(this)
+            this.previousGlobalVector = this.globalVector;
+            this.previousPhi = this.phi;
+            
             k=4*10^(-5)*(360/(2*pi))^2; % fitting constant from paper transformed to radians
+            eps = 1e-6;
             v = this.location-this.prevLocation;
             currentL = norm(v);
             % Implementation using the global vector variable
@@ -160,7 +167,7 @@ classdef Ant
                 delta = vector2angle(v)-this.phi;
             end
             %this.phi = (this.l*this.phi+delta+this.phi*currentL)/(this.l+currentL);
-            if this.l ~= 0
+            if abs(this.l) > eps
                 this.phi = this.phi+k*(pi+delta)*(pi-delta)*delta/this.l*currentL;
             end
             this.l = this.l + currentL - abs(delta)/pi*2*currentL;
@@ -168,7 +175,8 @@ classdef Ant
                 this.globalVector = [cos(this.phi) ; sin(this.phi)]*this.l;
             end
             
-            if this.Phi
+            if isnan(this.phi)
+                this.phi = this.pr
         end
         
         % This method tries to recognize a landmark, checking in the
@@ -332,14 +340,14 @@ classdef Ant
             end
         end
         
-        % Navigate using path integrator
-        % HAS TO BE IMPLEMENTED PROPERLY
-        function this = navigateUsingPathIntegrator(this, ground, dt)
-            if strcmp(this.lookingFor,'food')
-                this = this.stepStraightTo(ground.foodSourceLocation,dt);
-            elseif strcmp(this.lookingFor,'nest')
-                this = this.stepStraightTo(this.location-this.globalVector,dt);
-                
+        % Navigate home using path integrator
+        function this = returnHomeUsingPathIntegrator(this, ground, dt)
+            % use visual landmarks to navigate with local vector if near
+            % target
+            if norm(ground.nestLocation-this.location) < this.viewRange
+                this = this.stepStraightTo(ground.nestLocation,dt);
+            else
+                this = this.stepStraightTo(-this.globalVector,dt);
             end
         end
         
@@ -391,7 +399,7 @@ classdef Ant
             this.prevLocation = nan;
             this.location = ground.nestLocation;
             this.pheromoneIntensityToFollow = 300;
-            this.phi = 0;
+            this.phi = vector2angle(this.velocityVector);
             this.l = 0;
             this.pathDirection = [0;0];
             this.goingToNestDirectly = false;

@@ -16,13 +16,9 @@ nestPh = nestPh.setPrev(nestPh);
 ground.pheromoneParticles = nestPh;
 ground.foodSourceLocation = foodSourceLocation;
 ant = Ant;
-ant = ant.setUp(ground);
-ant.velocityVector(1:2) = [0;1];
 ground.ants = ant;
-ant.setUp(ground);
-eps = 0.01;
-
-ant.phi = vector2angle(ant.velocityVector); %cheating
+ant = ant.setUp(ground);
+eps = 1e-4;
 
 plot_title = 'looking for food';
 
@@ -46,11 +42,14 @@ while(currentPrint ==1 || ant.location(1) >= 0)
         ant.lookingFor = 'food';
     end
     
+    vtest = [0;1];
+    
     if strcmp(ant.lookingFor, 'food')
-        
         ant = ant.lookForSomething(ground,dt);
+        %ant = ant.stepStraightTo(ant.location+[ant.velocityVector(1);ant.velocityVector(2)],dt);
+        %ant = ant.stepStraightTo(ant.location+vtest,dt);
     elseif strcmp(ant.lookingFor, 'nest')
-        ant = ant.navigateUsingPathIntegrator(ground,dt);
+        ant = ant.returnHomeUsingPathIntegrator(ground, dt);
     end
     
     ground.ants(1) = ant;
@@ -70,7 +69,7 @@ while(currentPrint ==1 || ant.location(1) >= 0)
     ant.l
     ant.phi
     %currentPrint = currentPrint+1;
-    ant = ant.updateGlobalVector(dt);
+    ant = ant.updateGlobalVector(ground);
     if currentPrint > 1000
         break
     end
