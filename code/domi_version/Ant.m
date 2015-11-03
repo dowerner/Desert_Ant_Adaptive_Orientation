@@ -337,7 +337,7 @@ classdef Ant
             if strcmp(this.lookingFor,'food')
                 this = this.stepStraightTo(ground.foodSourceLocation,dt);
             elseif strcmp(this.lookingFor,'nest')
-                this = this.stepStraightTo(this.location-this.globalVector,dt);
+                this = this.stepStraightTo(-this.globalVector,dt);
                 
             end
         end
