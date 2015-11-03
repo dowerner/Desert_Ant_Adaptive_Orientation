@@ -15,13 +15,39 @@
 
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %Additinal packages ants in the pants
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \usepackage[]{algorithm2e}
 \usepackage{todonotes}
 \usepackage[german]{babel}
 \usepackage[utf8]{inputenc}	
+%-------------------------------------Listings------------------------------------- 				
+\usepackage{listings}	
+\lstset{
+language=matlab,
+basicstyle=\sffamily\scriptsize,
+frame=single,
+rulecolor=\color{gray},
+numbers=right,
+stepnumber=5,
+firstnumber=1,
+numberfirstline=true,
+xrightmargin= 20pt, 		%Abstand vom Rahmenrechts
+framexrightmargin=20pt,	%Abstand der Nummern
+%xleftmarargin= 25pt, %Abstand links
+numberstyle=\sffamily\scriptsize\color{lightgray}
+%numberstyle=\sffamily\tiny\color{lightgray}
+%columns=flexible,
+%keepspaces=true,
+} 
+
+
+
+
+
+
+
 
 
 
@@ -221,9 +247,19 @@ The results gained R. Wehner's experiments indicate that ants use predominantly 
 \newpage
 \section{Introduction and Motivations}
 
+
 \section{Description of the Model}
 
 \section{Implementation}
+
+
+
+
+
+\lstinputlisting[captionpos=b,caption=Beispiel,label="Label_Beispiel"]{./Code/Beispiel.m}
+
+
+
 
 \section{Simulation Results and Discussion}
 
