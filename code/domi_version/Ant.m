@@ -34,6 +34,9 @@ classdef Ant
         lookingFor % String witch says what the ant is looking for.
         
         startangle % angle with ant leaves the nest
+        
+        previousPhi
+        previousGlobalVector
     end
     
     %-- NOTE: the non static methods requires always an argument.
@@ -143,30 +146,46 @@ classdef Ant
         end
         
         % This method updates the global vector after the ant moved.
-        function this = updateGlobalVector(this,dt)
-            k=4*10^(-5)*(360/(2*pi))^2; % fitting constant from paper transformed to radians
-            eps = 1e-6;
-            v = this.location-this.prevLocation;
-            currentL = norm(v);
-            % Implementation using the global vector variable
-            %this.globalVector = this.globalVector-v; 
+        function this = updateGlobalVector(this, ground)
+            % store old values in case they have to be restored
+            this.previousGlobalVector = this.globalVector;
+            this.previousPhi = this.phi;
             
-            % Implementation using a more realist model
-            oldDir = this.pathDirection;
-            % Needed by the first step
-            if isnan(vector2angle(oldDir))
-                delta = 0;
-                this.phi=vector2angle(v);
-            else
-                delta = vector2angle(v)-this.phi;
-            end
-            %this.phi = (this.l*this.phi+delta+this.phi*currentL)/(this.l+currentL);
-            if abs(this.l) > eps
-                this.phi = this.phi+k*(pi+delta)*(pi-delta)*delta/this.l*currentL;
-            end
-            this.l = this.l + currentL - abs(delta)/pi*2*currentL;
-            if ~this.goingToNestDirectly
-                this.globalVector = [cos(this.phi) ; sin(this.phi)]*this.l;
+            % if near nest set global vector to zero
+            if norm(ground.nestLocation-this.location) < this.viewRange
+                this.globalVector = [0;0];
+                this.phi = vector2angle(this.velocityVector);
+            else            
+                k=4*10^(-5)*(360/(2*pi))^2; % fitting constant from paper transformed to radians
+                eps = 1e-6;
+                v = this.location-this.prevLocation;
+                currentL = norm(v);
+                
+                % Implementation using a more realist model
+                oldDir = this.pathDirection;
+                % Needed by the first step
+                if isnan(vector2angle(oldDir))
+                    delta = 0;
+                    this.phi=vector2angle(v);
+                else
+                    delta = vector2angle(v)-this.phi;
+                end
+                %this.phi = (this.l*this.phi+delta+this.phi*currentL)/(this.l+currentL);
+                if abs(this.l) > eps
+                    this.phi = this.phi+k*(pi+delta)*(pi-delta)*delta/this.l*currentL;
+                end
+                this.l = this.l + currentL - abs(delta)/pi*2*currentL;
+                if ~this.goingToNestDirectly
+                    this.globalVector = [cos(this.phi) ; sin(this.phi)]*this.l;
+                end
+
+                % prohibit global vector from beeing an invalid number
+                if isnan(this.phi) || isinf(this.phi)
+                    this.phi = this.previousPhi;
+                end
+                if isnan(this.globalVector(1)) || isnan(this.globalVector(2)) || isinf(this.globalVector(1)) || isinf(this.globalVector(2))
+                    this.globalVector = this.previousGlobalVector;
+                end
             end
         end
         
@@ -259,28 +278,6 @@ classdef Ant
             end
         end
         
-        % This method makes the ant go back to the nest directly using the
-        % global vector.
-        function this = backToNestDirectly(this,ground,dt)
-            if norm(this.globalVector) < 1e-6 && ...
-               norm(this.location-ground.nestLocation) > 1e-6
-                this.goingToNestDirectly = false;
-                this.problemEncountered = 'nestNotFound';
-                this.pointNearbyToSearch = this.location;
-                this.timeToSpendInSearch = inf;
-                this.confidenceRegion = 5/dt;
-                return;
-            end
-            if norm(this.globalVector) < this.velocityVector(3)*dt
-                target = this.location+this.globalVector;
-                this = this.stepStraightTo(target,dt);
-            else
-                this.velocityVector(1:2) = this.globalVector;
-                this = this.updateLocation(dt);
-            end
-            
-        end
-        
         % This method is made in order for the ant to look for something.
         % The 'lookingFor'-variables stores the current target.
         % When the ant does not see the target it takes a random step.
@@ -331,14 +328,14 @@ classdef Ant
             end
         end
         
-        % Navigate using path integrator
-        % HAS TO BE IMPLEMENTED PROPERLY
-        function this = navigateUsingPathIntegrator(this, ground, dt)
-            if strcmp(this.lookingFor,'food')
-                this = this.stepStraightTo(ground.foodSourceLocation,dt);
-            elseif strcmp(this.lookingFor,'nest')
-                this = this.stepStraightTo(this.location-this.globalVector,dt);
-                
+        % Navigate home using path integrator
+        function this = returnHomeUsingPathIntegrator(this, ground, dt)
+            % use visual landmarks to navigate with local vector if near
+            % target
+            if norm(ground.nestLocation-this.location) < this.viewRange
+                this = this.stepStraightTo(ground.nestLocation,dt);
+            else
+                this = this.stepStraightTo(-this.globalVector,dt);
             end
         end
         
@@ -390,7 +387,7 @@ classdef Ant
             this.prevLocation = nan;
             this.location = ground.nestLocation;
             this.pheromoneIntensityToFollow = 300;
-            this.phi = 0;
+            this.phi = vector2angle(this.velocityVector);
             this.l = 0;
             this.pathDirection = [0;0];
             this.goingToNestDirectly = false;
