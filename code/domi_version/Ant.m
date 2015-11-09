@@ -157,17 +157,27 @@ classdef Ant
                         delta = 0;
                         this.phi=vector2angle(v);
                     else
-                        delta = vector2angle(v)-this.phi;
+                        delta = vector2angle(v)-this.phi
+                        if abs(delta)> pi+eps %stumpfer winkel wird zu spitzem winkel konvertiert falls stumpf
+                            
+                            if (delta>pi)
+                                delta=-(2*pi-delta)
+                            else
+                                delta=2*pi+delta
+                            end
+                            
+                        end
+                            
                     end
                     %this.phi = (this.l*this.phi+delta+this.phi*currentL)/(this.l+currentL);
                     if abs(this.l) > eps
-                        this.phi = this.phi+k*(pi+delta)*(pi-delta)*delta/this.l*currentL;
+                        this.phi = mod(this.phi+k*(pi+delta)*(pi-delta)*delta/this.l*currentL,2*pi);
                     end
                     this.l = this.l + currentL - abs(delta)/pi*2*currentL;
                     if ~this.goingToNestDirectly
                         this.globalVector = [cos(this.phi) ; sin(this.phi)]*this.l;
                     end
-                    if (abs(this.l)>10)
+                    if (abs(this.l)>7)
                         this.lookingFor='nest';
                     end
                     % prohibit global vector from beeing an invalid number

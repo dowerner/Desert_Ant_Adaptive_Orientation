@@ -43,7 +43,7 @@ while(currentPrint ==1 || ant.location(1) >= 0)
         ant.lookingFor = 'food';
     end
     
-    %ant.velocityVector(1:2) = [0;-1];
+    vtest = [0.3;1];
     
     if strcmp(ant.lookingFor, 'food')
         if norm(ground.foodSourceLocation-ant.location) < ant.viewRange
@@ -51,7 +51,7 @@ while(currentPrint ==1 || ant.location(1) >= 0)
         else
         %ant = ant.lookForSomething(ground,dt);
         %ant = ant.stepStraightTo(ant.location+[ant.velocityVector(1);ant.velocityVector(2)],dt);
-        %ant = ant.stepStraightTo(ant.location+vtest,dt);
+        ant = ant.stepStraightTo(ant.location+vtest,dt);
         ant = ant.takeRandomStep(dt);
         end
     elseif strcmp(ant.lookingFor, 'nest')
