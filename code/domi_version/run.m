@@ -42,7 +42,7 @@ while(currentPrint ==1 || ant.location(1) >= 0)
         ant.lookingFor = 'food';
     end
     
-    vtest = [0.3;1];
+    %vtest = [0.3;1];
     
     if strcmp(ant.lookingFor, 'food')
         if norm(ground.foodSourceLocation-ant.location) < ant.viewRange
