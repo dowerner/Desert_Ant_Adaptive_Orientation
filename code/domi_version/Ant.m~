@@ -135,7 +135,7 @@ classdef Ant
             this.previousPhi = this.phi;
             
             % if near nest set global vector to zero
-            if norm(ground.nestLocation-this.location) < this.viewRange   % divide by 10 in order for the local vector to not lag much behind
+            if norm(ground.nestLocation-this.location) < this.viewRange  % divide by 10 in order for the local vector to not lag much behind
                 this.l = 0;
                 this.phi = vector2angle(this.velocityVector);
                 this.isLeavingNest=1;
@@ -188,12 +188,9 @@ classdef Ant
             % targetgit@github.com:dowerner/Desert_Ant_Adaptive_Orientation.git
             
             if isnan(this.l)
-                if norm(ground.nestLocation-this.location) < this.viewRange
-                    this = this.stepStraightTo(ground.foodSourceLocation,dt);
-                else
-                    this=this.takeRandomStep(dt);
-                end
+                this=this.takeRandom
             else
+            
                 if norm(ground.nestLocation-this.location) < this.viewRange
                     this = this.stepStraightTo(ground.nestLocation,dt);
                 else

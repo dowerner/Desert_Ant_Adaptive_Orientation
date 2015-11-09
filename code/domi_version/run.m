@@ -42,12 +42,17 @@ while(currentPrint ==1 || ant.location(1) >= 0)
         ant.lookingFor = 'food';
     end
     
-    vtest = [0;1];
+    vtest = [0.3;1];
     
     if strcmp(ant.lookingFor, 'food')
-        ant = ant.lookForSomething(ground,dt);
+        if norm(ground.foodSourceLocation-ant.location) < ant.viewRange
+            ant = ant.stepStraightTo(ground.foodSourceLocation,dt);
+        else
+        %ant = ant.lookForSomething(ground,dt);
         %ant = ant.stepStraightTo(ant.location+[ant.velocityVector(1);ant.velocityVector(2)],dt);
         %ant = ant.stepStraightTo(ant.location+vtest,dt);
+        ant = ant.takeRandomStep(dt);
+        end
     elseif strcmp(ant.lookingFor, 'nest')
         ant = ant.returnHomeUsingPathIntegrator(ground, dt);
     end
@@ -57,7 +62,7 @@ while(currentPrint ==1 || ant.location(1) >= 0)
     hold on;
     minv = min([nestLocation foodSourceLocation]');
     maxv = max([nestLocation foodSourceLocation]');
-    axis([minv(1)-2 maxv(1)+2 minv(2)-2 maxv(2)+2]);
+    axis([minv(1)-8 maxv(1)+8 minv(2)-8 maxv(2)+8]);
     title(plot_title);
     xlabel('length [m]');
     ylabel('length [m]');
