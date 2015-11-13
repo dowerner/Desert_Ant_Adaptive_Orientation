@@ -1,0 +1,13 @@
+function angle = vector2angle(v)
+if v(1)==0
+   if v(2)>0 
+       angle= pi/2;
+   else
+       angle= -pi/2;
+   end
+else
+angle = atan(v(2)/v(1));
+if v(1) < 0
+    angle = angle+pi;
+end
+end
