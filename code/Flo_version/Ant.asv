@@ -38,6 +38,8 @@ classdef Ant
         previousPhi
         previousGlobalVector
         isLeavingNest  % prohibit returning directly to nest on leaving
+        maxDistance % when global vector reaches this value, the ant returns to the nest
+        lostPosition % when the ant want to get home, but wont find it, this is the place where global vector=0
     end
     
     %-- NOTE: the non static methods requires always an argument.
@@ -46,6 +48,9 @@ classdef Ant
     %-- Thus the method looks like this: function my_method(this)
     %-- and the call to the method is: obj.my_method()
     methods
+        
+        
+        
         
         % Needed to preallocate an array of ants.
         function antsArr = Ant(F)
@@ -56,6 +61,50 @@ classdef Ant
             end
         end
           
+        
+        
+        %the only function that should be called
+        function this=performStep(this,ground,dt)
+            
+            %don't know what this is good for, but won't work without
+            this.velocityVector(1:2) = this.velocityVector(1:2)./norm(this.velocityVector(1:2));
+            this.pathDirection =this.velocityVector(1:2);
+
+            eps = 1e-4;
+            if strcmp(this.lookingFor, 'food') && norm(this.location-ground.foodSourceLocation) < eps
+                
+                this.carryingFood = true;
+                this.lookingFor = 'nest';
+            end
+    
+            % pickup food and set nest as target
+            if strcmp(this.lookingFor, 'nest') && norm(this.location-ground.nestLocation) < eps
+               
+                %this.setUp(ground)
+                this.carryingFood = false;
+                this.lookingFor = 'food';
+                this=this.setUp(ground);
+            end
+    
+    
+    
+            if strcmp(this.lookingFor, 'food')
+                if norm(ground.foodSourceLocation-this.location) < this.viewRange
+                    this = this.stepStraightTo(ground.foodSourceLocation,dt);
+                else
+                this = this.takeRandomStep(dt);
+                end
+            elseif strcmp(this.lookingFor, 'nest')
+                this = this.returnHomeUsingPathIntegrator(ground, dt);
+            end
+            this=this.updateGlobalVector(ground);
+            
+            
+            
+            
+            
+        end
+        
         % This method update the location of the ant using velocity vector
         % information
         function this = updateLocation(this,dt)
@@ -157,13 +206,13 @@ classdef Ant
                         delta = 0;
                         this.phi=vector2angle(v);
                     else
-                        delta = vector2angle(v)-this.phi
-                        if abs(delta)> pi+eps
+                        delta = vector2angle(v)-this.phi;
+                        if abs(delta)> pi+eps %stumpfer winkel wird zu spitzem winkel konvertiert falls stumpf
                             
                             if (delta>pi)
-                                delta=2*pi-delta
+                                delta=-(2*pi-delta);
                             else
-                                delta=2*pi-delta
+                                delta=2*pi+delta;
                             end
                             
                         end
@@ -177,7 +226,7 @@ classdef Ant
                     if ~this.goingToNestDirectly
                         this.globalVector = [cos(this.phi) ; sin(this.phi)]*this.l;
                     end
-                    if (abs(this.l)>7)
+                    if (abs(this.l)>this.maxDistance)
                         this.lookingFor='nest';
                     end
                     % prohibit global vector from beeing an invalid number
@@ -201,6 +250,10 @@ classdef Ant
                 if norm(ground.nestLocation-this.location) < this.viewRange
                     this = this.stepStraightTo(ground.foodSourceLocation,dt);
                 else
+                    if isnan(this.lostPosition)
+                        this.lostPosition=this.location;
+                    end
+                    this=this.lookAround(this.lostPosition,dt);
                     this=this.takeRandomStep(dt);
                 end
             else
@@ -212,11 +265,19 @@ classdef Ant
             end
         end
         
+        
+        function this=lookAround(this,point,dt)
+            
+        end
+        
+        
+        
         % Build an ant
         function this = setUp(this,ground)
             v = ([rand;rand]).*2-1;
             v = v./norm(v);
             v = [v;0.125];
+            this.maxDistance=10;
             this.isLeavingNest = 1;
             this.startangle=vector2angle(v);
             thi.phi=vector2angle(v);
@@ -238,6 +299,7 @@ classdef Ant
             this.pathDirection = [0;0];
             this.goingToNestDirectly = false;
             this.storedLandmarksMap = Hashtable;
+            this.lostPosition=nan;
         end
         
     end

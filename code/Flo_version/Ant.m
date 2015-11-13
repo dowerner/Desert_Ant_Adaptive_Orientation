@@ -39,6 +39,7 @@ classdef Ant
         previousGlobalVector
         isLeavingNest  % prohibit returning directly to nest on leaving
         maxDistance % when global vector reaches this value, the ant returns to the nest
+        lostPosition % when the ant want to get home, but wont find it, this is the place where global vector=0
     end
     
     %-- NOTE: the non static methods requires always an argument.
@@ -245,10 +246,17 @@ classdef Ant
             % use visual landmarks to navigate with local vector if near
             % targetgit@github.com:dowerner/Desert_Ant_Adaptive_Orientation.git
             
+
+            
             if isnan(this.l)
                 if norm(ground.nestLocation-this.location) < this.viewRange
                     this = this.stepStraightTo(ground.foodSourceLocation,dt);
+                    this.lostPosition=nan;
                 else
+                    if isnan(this.lostPosition)
+                        this.lostPosition=this.location;
+                    end
+                    this=this.lookAround(this.lostPosition,dt);
                     this=this.takeRandomStep(dt);
                 end
             else
@@ -259,6 +267,20 @@ classdef Ant
                 end
             end
         end
+        
+        
+        function this=lookAround(this,point,dt)
+ 
+            if (norm(this.location-point)>=4)
+                this=this.stepStraightTo(point,dt);
+            else
+                this=this.takeRandomStep(dt);
+            end
+
+            
+        end
+        
+        
         
         % Build an ant
         function this = setUp(this,ground)
@@ -287,6 +309,7 @@ classdef Ant
             this.pathDirection = [0;0];
             this.goingToNestDirectly = false;
             this.storedLandmarksMap = Hashtable;
+            this.lostPosition=nan;
         end
         
     end
