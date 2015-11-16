@@ -23,7 +23,7 @@ eps = 1e-4;
 plot_title = 'looking for food';
 
 currentPrint = 1;
-while(currentPrint ==1 || ant.location(1) >= 0)
+while(currentPrint == 1 || ant.location(1) >= 0)
     ant.velocityVector(1:2) = ant.velocityVector(1:2)./norm(ant.velocityVector(1:2));
     ant.pathDirection = ant.velocityVector(1:2);
     %ground = ant.releasePheromone(ground);

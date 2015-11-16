@@ -15,23 +15,19 @@ nestPh.intensity = 0;
 nestPh = nestPh.setPrev(nestPh);
 ground.pheromoneParticles = nestPh;
 ground.foodSourceLocation = foodSourceLocation;
-nAnts=6;
+nAnts = 6;
 ants = Ant(zeros(nAnts,1));
 for i = 1 : length(ants)
-    ant = Ant;
-    ant = ant.setUp(ground);
-    ants(i) = ant;
+    ants(i) = Ant;
+    ants(i) = ants(i).setUp(ground);
 end
 ground.ants = ants;
 
 currentPrint = 1;
-while(currentPrint ==1 || ant.location(1) >= 0)
-    ant=ant.performStep(ground,dt);
-    
-     for j = 1 : length(ground.ants)
-        a  = ground.ants(j).performStep(ground,dt);
-        
-        ground.ants(j) = a;
+while(currentPrint == 1 || ant.location(1) >= 0) 
+    for j = 1 : length(ground.ants)
+        ants(j) = ants(j).performStep(ground,dt);
+        ground.ants(j) = ants(j);
     end
     cla;
     hold on;
@@ -39,9 +35,13 @@ while(currentPrint ==1 || ant.location(1) >= 0)
     title('Pheromone-based orientation');
     xlabel('length [m]');
     ylabel('length [m]');
-    ground = updateGround(ground,i,dt,printFlag);
+    ground = updateGround(ground,length(ants),dt,printFlag);
     
     drawnow;
 end
 end
+
+
+
+
 
