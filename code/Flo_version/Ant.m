@@ -43,8 +43,14 @@ classdef Ant
         searchRadius % radius around lost distance in which the ant will be searching
         
         timer % time ellapsed since the ant has left the nest
-        returnTime % time after which the ant has to return to the nest
-        livingTime % time after which the ant is burning
+        timerWNoise % timer with some white noise
+       % returnTime % time after which the ant has to return to the nest
+       % Neu wird die returnTime aus Distanz und Geschwindigkeit und
+       % livingTime berechnet
+        livingTime % time after which the ant dies of overheating
+        timeLapseFactor
+       
+        
 
     end
     
@@ -70,25 +76,53 @@ classdef Ant
         
         
         %the only function that should be called
+   
         function this = performStep(this,ground,dt)
+            eps = 1e-4;
             
+            % a pause so that according to the timeLapseFactor a step in
+            % realtime takes ONE second.
+            pause(1*(this.timeLapseFactor)^(-1)-0.002);
             %don't know what this is good for, but won't work without
             this.velocityVector(1:2) = this.velocityVector(1:2)./norm(this.velocityVector(1:2));
             this.pathDirection = this.velocityVector(1:2);
             
-            % ant dies if it's out for too long
-%             if this.timer >= this.livingTime
-%                 delete(this);
-%                 return
-%             end
-            % ant goes back if it has been in the field for too long
-            if this.timer >= this.returnTime
-                this.lookingFor = 'nest';
+            
+
+            
+            
+         % ant dies if it's out for too long 
+         if(this.timer >=this.livingTime)
+           %delete(this);
+           return;
+         end
+
+         
+       % ant returns so that with the time for the way home the time
+       % outside the nest doesnt exceed the maximal living time.     
+         
+         
+         
+         
+         
+         
+         if this.velocityVector(3) > eps
+             returnZeit =   (this.l)/(this.velocityVector(3));
+                 else
+             returnZeit=returnTime;
+         end
+      
+           
+
+     
+       if (this.timerWNoise+returnZeit-this.livingTime) > eps 
+        %if this.timer >= this.returnTime
+                   this.lookingFor = 'nest';
             end
 
             % ant picks up food and set nest as target if its location is
             % at food source
-            eps = 1e-4;
+     
             if strcmp(this.lookingFor, 'food') && norm(this.location-ground.foodSourceLocation) < eps               
                 this.carryingFood = true;
                 this.lookingFor = 'nest';
@@ -116,11 +150,18 @@ classdef Ant
                 this = this.returnHomeUsingPathIntegrator(ground, dt);
             end
             
+                   
             this.timer = this.timer + dt;
-            this = this.updateGlobalVector(ground);    
+            %Adding some white noise to the timer
+            this.timerWNoise = this.timerWNoise + randn(1,1) +dt;
+                                
+            
+            
+            this = this.updateGlobalVector(ground);   
+            
             
         end
-        
+  
         % This method update the location of the ant using velocity vector
         % information
         function this = updateLocation(this,dt)
@@ -195,8 +236,12 @@ classdef Ant
         end
         
         % This method updates the global vector after the ant moved.
+        
         function this = updateGlobalVector(this, ground)
-            % store old values in case they have to be restored
+            
+            % 
+            %sleep(1-0.001);
+            % store olvalues in case they have to be restored
             this.previousGlobalVector = this.globalVector;
             this.previousPhi = this.phi;
             
@@ -298,7 +343,8 @@ classdef Ant
         function this = setUp(this,ground)
             v = ([rand;rand]).*2-1;
             v = v./norm(v);
-            v = [v;0.125];
+            %v = [v;0.125];
+            v = [v;1];
             this.maxDistance = 10;
             this.isLeavingNest = 1;
             this.startangle = vector2angle(v);
@@ -324,8 +370,10 @@ classdef Ant
             this.lostPosition = nan;
             this.searchRadius = 4;
             this.timer = 0;
-            this.returnTime = 100; 
+            this.timerWNoise = 0;
             this.livingTime = 300;
+            this.timeLapseFactor=500;
+            
         end
     end
 end
