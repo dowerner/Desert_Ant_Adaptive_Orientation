@@ -8,6 +8,9 @@ b = c(end);
 h = (b-a) / length(c); 
 
 %Summated trapez rule
-integral =  h/2 * ( f(:,:,1) + 2*sum(f(:,:,2:end-1)) + f(:,:,end) );
+integral = 0;
+for k = 1:length(c)-1
+    integral = integral + h/2*( f(:,:,k) + f(:,:,k+1) );
+end
 
 end

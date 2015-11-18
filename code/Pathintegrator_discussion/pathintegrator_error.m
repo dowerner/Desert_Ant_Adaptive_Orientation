@@ -1,26 +1,36 @@
+% calculates the expected error of the path integrator of the paper to the
+% exact path integrator with respect to distance from the nest and step
+% width of the ant
+
 % constants
 k = 0.1316;
-id = ones(length(L), length(l));  
 
 % arguments
 
 % step width
-l = linspace(0.01,1,100);
-dl = ( l(end)-l(1) ) / 100;
+number_l = 100;
+l = linspace(0.01,1,number_l);
+dl = ( l(end)-l(1) ) / number_l;
 
 % distance from the nest
-L = linspace(1,100,50);
-dL = ( L(end)-L(1) ) / 50;
+number_L = 100; 
+L = linspace(0.1,100,number_L);
+dL = ( L(end)-L(1) ) / number_L;
 
+% [length(L), length(l)] - matrices for calculations
 l_r = repmat(l,length(L),1);
 L_r = repmat(L',1,length(l));
+id = ones(length(L), length(l));  
 
-[stepWidth, distance] = meshgrid(l, L);
+% change of direction as an angle in radian
+number_delta = 100;
+delta = linspace(-pi,pi,number_delta);
 
-delta = linspace(-pi,pi,80); % change direction angle
-sigma = pi/8; % variance of distribution
-pdf_delta = normpdf(delta,0,sigma); % distribution of delta
+% distribution of delta
+sigma = pi/8; % variance
+pdf_delta = normpdf(delta,0,sigma); 
 
+% calculations of perfect and actual global vectors
 L_perfect = zeros(length(L),length(l),length(delta));
 phi_perfect = zeros(length(L),length(l),length(delta));
 L_actual = zeros(length(L),length(l),length(delta));
@@ -42,8 +52,8 @@ end
 
 % error: distance between one step of the perfect integrator 
 % to one step of the actual integrator of the paper
-% e is a matrix with size [ length(L), length(delta) ]
-x_perfect = L_perfect.*cos(phi_perfect);
+% e is a matrix with size [ length(L), length(delta)
+x_perfect = L_perfect.*cos(phi_perfect); 
 y_perfect = L_perfect.*sin(phi_perfect);
 x_actual = L_actual.*cos(phi_actual);
 y_actual = L_actual.*sin(phi_actual);
@@ -51,22 +61,20 @@ y_actual = L_actual.*sin(phi_actual);
 e = sqrt( (x_perfect-x_actual).^2 + (y_perfect-y_actual).^2 );
 
 % expected value of the error
-integrand = zeros(length(L),length(l));
-e_vector = zeros(length(delta),1);
+integrand = zeros(length(L),length(l),length(delta));
 for ll  = l
     for LL = L 
         pos = [find(LL==L), find(ll==l)];
-        for d = delta
-            pos_d = find(d==delta);
-            e_vector(pos_d) = e(pos(1),pos(2),pos_d);
-        end
-        integrand(pos(1),pos(2)) = pdf_delta*e_vector;
+        integrand(pos(1),pos(2),:) = pdf_delta.*thirdDimToVector(e,pos(1),pos(2));
     end
 end
 
 E = trapezIntegration(integrand, delta);
 
-% plots
-% subplot(2,1,1);
-% subplot(2,2,1);
-mesh(stepWidth, distance, E);
+% plot
+figure
+[stepWidth, distance] = meshgrid(l, L);
+mesh(stepWidth, distance, abs(E));
+title('expected value of error of the global vector');
+xlabel('step width');
+ylabel('distance from nest');
