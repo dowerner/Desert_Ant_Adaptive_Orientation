@@ -5,17 +5,23 @@ if nargin == 0
 end
 
 nestLocation = [0;0];
-foodSourceLocation = [3;6];
 
 ground = Ground;
 ground.timeLapseFactor = 10;
 ground.nestLocation = nestLocation;
+
+% place food sources
+ground = ground.spawnFoodSource(5,7);
+ground = ground.spawnFoodSource(3,3);
+ground = ground.spawnFoodSource(-3,-1);
+ground = ground.spawnFoodSource(-5,5);
+
 nestPh = PheromoneParticle();
 nestPh.location = nestLocation;
 nestPh.intensity = 0;
 nestPh = nestPh.setPrev(nestPh);
 ground.pheromoneParticles = nestPh;
-ground.foodSourceLocation = foodSourceLocation;
+
 nAnts = 6;
 ants = Ant(zeros(nAnts,1));
 for i = 1 : length(ants)
@@ -33,7 +39,7 @@ while(currentPrint == 1 || ant.location(1) >= 0)
     cla;
     hold on;
     axis([-15 15 -15 15]);
-    title('Pheromone-based orientation');
+    title('foraging ants');
     xlabel('length [m]');
     ylabel('length [m]');
     ground = updateGround(ground,length(ants),dt,printFlag);

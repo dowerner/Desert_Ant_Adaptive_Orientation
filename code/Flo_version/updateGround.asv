@@ -1,4 +1,7 @@
 function ground = updateGround(ground,currentStep,dt,printFlag)
+    % set timestamt
+    tic;
+    
     removeList = zeros(length(ground.pheromoneParticles),1);
 
     % Update the pheromone pixels
@@ -49,8 +52,10 @@ function ground = updateGround(ground,currentStep,dt,printFlag)
     plot(ground.nestLocation(1),ground.nestLocation(2),'ro');
 
     % Update the food source pixels
-    plot(ground.foodSourceLocation(1),ground.foodSourceLocation(2),'go');
-
+    for i = 1 : length(ground.foodSourceLocations)
+        plot(ground.foodSourceLocation(1),ground.foodSourceLocation(2),'go');
+    end
+    
     if printFlag
         % It assures that the up to 9999 frames
         % the images are saved in the right order
@@ -71,6 +76,8 @@ function ground = updateGround(ground,currentStep,dt,printFlag)
     % realtime takes ONE second.
     timeToWait = 1-toc;
     
-    if timeToWait < 
+    if timeToWait < 0
+        timeToWait = 1;
+    end
     pause(timeToWait*(ground.timeLapseFactor)^(-1)-0.002);
 end

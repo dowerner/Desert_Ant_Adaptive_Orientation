@@ -10,9 +10,8 @@ classdef Ground
     
     methods
         
-        function this = spawnFoodSource(this, x,y)
-            this.foodSourceLocations = [this.foodSourceLocations [x; y]];
-            return;
+        function spawnFoodSource(this,x,y)
+            this.foodSourceLocations = [this.foodSourceLocations; x y];
         end
         
         function inRangeParticles = getParticlesInRange(this,ant)

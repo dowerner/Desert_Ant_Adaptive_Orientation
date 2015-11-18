@@ -48,6 +48,7 @@ classdef Ant
        % Neu wird die returnTime aus Distanz und Geschwindigkeit und
        % livingTime berechnet
         livingTime % time after which the ant dies of overheating
+        nearestFoodSourceLocation % nearest food source to ant
     end
     
     %-- NOTE: the non static methods requires always an argument.
@@ -98,7 +99,7 @@ classdef Ant
 
             % ant picks up food and set nest as target if its location is
             % at food source
-            if strcmp(this.lookingFor, 'food') && norm(this.location-ground.foodSourceLocation) < eps               
+            if strcmp(this.lookingFor, 'food') && norm(this.location-this.nearestFoodSourceLocation) < eps              
                 this.carryingFood = true;
                 this.lookingFor = 'nest';
             end
@@ -115,8 +116,8 @@ classdef Ant
             % ant goes directly to food source if it sees it
             % or performs a random step
             if strcmp(this.lookingFor, 'food')
-                if norm(ground.foodSourceLocation-this.location) < this.viewRange
-                    this = this.stepStraightTo(ground.foodSourceLocation,dt);
+                if norm(this.nearestFoodSourceLocation-this.location) < this.viewRange
+                    this = this.stepStraightTo(this.nearestFoodSourceLocation,dt);
                 else
                     this = this.takeRandomStep(dt);
                 end
@@ -227,7 +228,20 @@ classdef Ant
                     end
                 end
             end
-        
+            
+            % set nearest food source
+            this.nearestFoodSourceLocation = ground.foodSourceLocations(1);
+            distance = norm(this.location-ground.foodSourceLocations(1));
+            [~, length] = size(ground.foodSourceLocations);
+            if length > 1
+                for i = 2 : length
+                    newDistance = norm(this.location-ground.foodSourceLocations(:,i));
+                    if newDistance < distance
+                        distance = newDistance;
+                        this.nearestFoodSourceLocation = ground.foodSourceLocations(:,i);
+                    end
+                end
+            end
         end
         
         % Navigate home using path integrator
@@ -237,7 +251,7 @@ classdef Ant
             
             if isnan(this.l)
                 if norm(ground.nestLocation-this.location) < this.viewRange
-                    this = this.stepStraightTo(ground.foodSourceLocation,dt);
+                    this = this.stepStraightTo(this.nearestFoodSourceLocation,dt);
                     this.lostPosition = nan;
                 else
                     if isnan(this.lostPosition)
@@ -299,6 +313,20 @@ classdef Ant
             this.timer = 0;
             this.timerWNoise = 0;
             this.livingTime = 300;
+            
+            % set nearest food source
+            this.nearestFoodSourceLocation = ground.foodSourceLocations(:,1);
+            distance = norm(this.location-ground.foodSourceLocations(1));
+            [~, length] = size(ground.foodSourceLocations);
+            if length > 1
+                for i = 2 : length
+                    newDistance = norm(this.location-ground.foodSourceLocations(:,i));
+                    if newDistance < distance
+                        distance = newDistance;
+                        this.nearestFoodSourceLocation = ground.foodSourceLocations(:,i);
+                    end
+                end
+            end
         end
     end
 end

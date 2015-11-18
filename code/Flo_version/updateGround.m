@@ -2,45 +2,28 @@ function ground = updateGround(ground,currentStep,dt,printFlag)
     % set timestamt
     tic;
     
-    removeList = zeros(length(ground.pheromoneParticles),1);
+    try % for some reason the ant array can have less entries that get counted
+        % Update the ants pixels
+        for i = 1 : length(ground.ants)
+            text(ground.ants(i).prevLocation(1),ground.ants(i).prevLocation(2)+1,...
+                 strcat('#',int2str(i)),...
+                 'BackgroundColor',[.78 .89 1],...
+                 'FontSize',8,...
+                 'HorizontalAlignment','center');
+            plot(ground.ants(i).prevLocation(1),ground.ants(i).prevLocation(2),'ko');
 
-    % Update the pheromone pixels
-    for i = 1 : length(ground.pheromoneParticles)
-        phPart = ground.pheromoneParticles(i);
-        [r g b] = intensity2color(max(phPart.intensity,...
-                                    phPart.prev.intensity));
-        if ~isempty(ground.pheromoneParticles(i).prev.location)
-            plot([phPart.prev.location(1) phPart.location(1)],...
-                 [phPart.prev.location(2) phPart.location(2)],...
-                 'color',[r g b]);
+            %-- Used For Debug --%
+            %--------------------%
+
+        %     % Plot the walk direction
+        %     plot([ground.ants(i).prevLocation(1) ground.ants(i).prevLocation(1)+ground.ants(i).pathDirection(1)], ...
+        %          [ground.ants(i).prevLocation(2) ground.ants(i).prevLocation(2)+ground.ants(i).pathDirection(2)],...
+        %          'r');
+        %     % Plot the next position
+        %     plot(ground.ants(i).location(1),ground.ants(i).location(2),'r*');
         end
-        ground.pheromoneParticles(i) = phPart.decay(dt);
-        if ground.pheromoneParticles(i).intensity < 20
-            removeList(i) = i;
-        end
-    end
-
-    removeList(removeList == 0) = [];
-    ground.pheromoneParticles(removeList) = [];
-
-    % Update the ants pixels
-    for i = 1 : length(ground.ants)
-        text(ground.ants(i).prevLocation(1),ground.ants(i).prevLocation(2)+1,...
-             strcat('#',int2str(i)),...
-             'BackgroundColor',[.78 .89 1],...
-             'FontSize',8,...
-             'HorizontalAlignment','center');
-        plot(ground.ants(i).prevLocation(1),ground.ants(i).prevLocation(2),'ko');
-
-        %-- Used For Debug --%
-        %--------------------%
-
-    %     % Plot the walk direction
-    %     plot([ground.ants(i).prevLocation(1) ground.ants(i).prevLocation(1)+ground.ants(i).pathDirection(1)], ...
-    %          [ground.ants(i).prevLocation(2) ground.ants(i).prevLocation(2)+ground.ants(i).pathDirection(2)],...
-    %          'r');
-    %     % Plot the next position
-    %     plot(ground.ants(i).location(1),ground.ants(i).location(2),'r*');
+    catch
+        warning('Ant index exceeded.');
     end
 
     % Update the landmark pixels
@@ -52,8 +35,11 @@ function ground = updateGround(ground,currentStep,dt,printFlag)
     plot(ground.nestLocation(1),ground.nestLocation(2),'ro');
 
     % Update the food source pixels
-    plot(ground.foodSourceLocation(1),ground.foodSourceLocation(2),'go');
-
+    [~, count] = size(ground.foodSourceLocations);
+    for i = 1 : count
+        plot(ground.foodSourceLocations(1,i),ground.foodSourceLocations(2,i),'go');
+    end
+    
     if printFlag
         % It assures that the up to 9999 frames
         % the images are saved in the right order
