@@ -1,6 +1,6 @@
 function run(dt,printFlag)
 if nargin == 0
-    dt = 1;
+    dt = 0.1;
     printFlag = false;
 end
 

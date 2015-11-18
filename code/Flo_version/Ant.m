@@ -49,9 +49,6 @@ classdef Ant
        % livingTime berechnet
         livingTime % time after which the ant dies of overheating
         timeLapseFactor
-       
-        
-
     end
     
     %-- NOTE: the non static methods requires always an argument.
@@ -60,9 +57,6 @@ classdef Ant
     %-- Thus the method looks like this: function my_method(this)
     %-- and the call to the method is: obj.my_method()
     methods
-        
-        
-        
         
         % Needed to preallocate an array of ants.
         function antsArr = Ant(F)
@@ -79,87 +73,67 @@ classdef Ant
    
         function this = performStep(this,ground,dt)
             eps = 1e-4;
-            
+
             % a pause so that according to the timeLapseFactor a step in
             % realtime takes ONE second.
             pause(1*(this.timeLapseFactor)^(-1)-0.002);
             %don't know what this is good for, but won't work without
             this.velocityVector(1:2) = this.velocityVector(1:2)./norm(this.velocityVector(1:2));
             this.pathDirection = this.velocityVector(1:2);
-            
-            
 
-            
-            
-         % ant dies if it's out for too long 
-         if(this.timer >=this.livingTime)
-           %delete(this);
-           return;
-         end
+            % ant dies if it's out for too long 
+            if(this.timer >=this.livingTime)
+                %delete(this);
+                return;
+            end
 
-         
-       % ant returns so that with the time for the way home the time
-       % outside the nest doesnt exceed the maximal living time.     
-         
-         
-         
-         
-         
-         
-         if this.velocityVector(3) > eps
-             returnZeit =   (this.l)/(this.velocityVector(3));
-                 else
-             returnZeit=returnTime;
-         end
-      
-           
+            % ant returns so that with the time for the way home the time
+            % outside the nest doesnt exceed the maximal living time.     
+            if this.velocityVector(3) > eps
+                returnZeit =   (this.l)/(this.velocityVector(3));
+            else
+                returnZeit=returnTime;
+            end
 
-     
-       if (this.timerWNoise+returnZeit-this.livingTime) > eps 
-        %if this.timer >= this.returnTime
-                   this.lookingFor = 'nest';
+            if (this.timerWNoise+returnZeit-this.livingTime) > eps 
+                %if this.timer >= this.returnTime
+                this.lookingFor = 'nest';
             end
 
             % ant picks up food and set nest as target if its location is
             % at food source
-     
             if strcmp(this.lookingFor, 'food') && norm(this.location-ground.foodSourceLocation) < eps               
                 this.carryingFood = true;
                 this.lookingFor = 'nest';
             end
-    
+
             %  ant puts down food and set food source as target if its
             %  location is at nest
             if strcmp(this.lookingFor, 'nest') && norm(this.location-ground.nestLocation) < eps
-               
                 %this.setUp(ground)
                 this.carryingFood = false;
                 this.lookingFor = 'food';
                 this = this.setUp(ground);
             end
-        
+
             % ant goes directly to food source if it sees it
             % or performs a random step
             if strcmp(this.lookingFor, 'food')
                 if norm(ground.foodSourceLocation-this.location) < this.viewRange
                     this = this.stepStraightTo(ground.foodSourceLocation,dt);
                 else
-                this = this.takeRandomStep(dt);
+                    this = this.takeRandomStep(dt);
                 end
             elseif strcmp(this.lookingFor, 'nest')
                 this = this.returnHomeUsingPathIntegrator(ground, dt);
             end
-            
-                   
+
+
             this.timer = this.timer + dt;
             %Adding some white noise to the timer
             this.timerWNoise = this.timerWNoise + randn(1,1) +dt;
-                                
-            
-            
+
             this = this.updateGlobalVector(ground);   
-            
-            
         end
   
         % This method update the location of the ant using velocity vector
@@ -186,21 +160,6 @@ classdef Ant
             end
         end
         
-        function this = followPheromonePath(this,ground,dt)
-            [bool, particle] = ground.hasPheromoneInLocation(this.location);
-            if bool
-                if this.carryingFood
-                    this.prevLocation = this.location;
-                    this.location = particle.next.location;
-                else
-                    this.prevLocation = this.location;
-                    this.location = particle.prev.location;
-                end
-            else
-                this = this.randomWalkStep(ground,dt);
-            end
-        end
-        
         % ant performs random step
         function this = takeRandomStep(this, dt)
            varphi = normrnd(0,1)*pi/8;
@@ -208,37 +167,9 @@ classdef Ant
            this = this.updateLocation(dt);
         end
         
-        % This method release pheromone on the ground, in the current and
-        % position.
-        function ground = releasePheromone(this,ground)
-            pheromoneParticle = PheromoneParticle;
-            pheromoneParticle.location = this.location;
-            if this.carryingFood || this.followingPheromonePath
-                pheromoneParticle.intensity = this.pheromoneIntensity+100;
-            else
-                pheromoneParticle.intensity = this.pheromoneIntensity;
-            end
-            arr = ground.pheromoneParticles; % arr just to abbreviate next line
-            [bool prevParticle positionInArray] = ground.hasPheromoneInLocation(pheromoneParticle.location);
-            if bool
-                newPheromoneParticle = ...
-                    arr(positionInArray).mergeWhithParticle(pheromoneParticle);
-                clear pheromoneParticle;
-                arr(positionInArray) = newPheromoneParticle;
-                ground.pheromoneParticles = arr;
-            else
-                [bool prevParticle positionInArray] = ground.hasPheromoneInLocation(this.prevLocation);
-                prevParticle = prevParticle.setNext(pheromoneParticle);
-                pheromoneParticle = pheromoneParticle.setPrev(prevParticle);
-                arr(positionInArray) = prevParticle;
-                ground.pheromoneParticles = [arr;pheromoneParticle];
-            end
-        end
-        
         % This method updates the global vector after the ant moved.
         
         function this = updateGlobalVector(this, ground)
-            
             % 
             %sleep(1-0.001);
             % store olvalues in case they have to be restored
@@ -372,8 +303,7 @@ classdef Ant
             this.timer = 0;
             this.timerWNoise = 0;
             this.livingTime = 300;
-            this.timeLapseFactor=500;
-            
+            this.timeLapseFactor=10;
         end
     end
 end
