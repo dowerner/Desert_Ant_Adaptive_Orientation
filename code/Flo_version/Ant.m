@@ -48,7 +48,6 @@ classdef Ant
        % Neu wird die returnTime aus Distanz und Geschwindigkeit und
        % livingTime berechnet
         livingTime % time after which the ant dies of overheating
-        timeLapseFactor
     end
     
     %-- NOTE: the non static methods requires always an argument.
@@ -74,9 +73,6 @@ classdef Ant
         function this = performStep(this,ground,dt)
             eps = 1e-4;
 
-            % a pause so that according to the timeLapseFactor a step in
-            % realtime takes ONE second.
-            pause(1*(this.timeLapseFactor)^(-1)-0.002);
             %don't know what this is good for, but won't work without
             this.velocityVector(1:2) = this.velocityVector(1:2)./norm(this.velocityVector(1:2));
             this.pathDirection = this.velocityVector(1:2);
@@ -303,7 +299,6 @@ classdef Ant
             this.timer = 0;
             this.timerWNoise = 0;
             this.livingTime = 300;
-            this.timeLapseFactor=10;
         end
     end
 end

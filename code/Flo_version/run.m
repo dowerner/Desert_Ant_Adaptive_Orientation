@@ -8,6 +8,7 @@ nestLocation = [0;0];
 foodSourceLocation = [3;6];
 
 ground = Ground;
+ground.timeLapseFactor = 10;
 ground.nestLocation = nestLocation;
 nestPh = PheromoneParticle();
 nestPh.location = nestLocation;
@@ -26,9 +27,7 @@ ground.ants = ants;
 currentPrint = 1;
 while(currentPrint == 1 || ant.location(1) >= 0) 
     for j = 1 : length(ground.ants)
-        tic;
         ants(j) = ants(j).performStep(ground,dt);
-        toc;
         ground.ants(j) = ants(j);
     end
     cla;

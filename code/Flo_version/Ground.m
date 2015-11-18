@@ -5,6 +5,7 @@ classdef Ground
         pheromoneParticles
         ants
         landmarks
+        timeLapseFactor % determines how fast the simulation is running
     end
     
     methods
