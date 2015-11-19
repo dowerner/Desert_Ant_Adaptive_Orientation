@@ -2,7 +2,6 @@ classdef Ground
     properties
         nestLocation
         foodSourceLocations
-        pheromoneParticles
         ants
         landmarks
         timeLapseFactor % determines how fast the simulation is running
@@ -14,25 +13,7 @@ classdef Ground
             this.foodSourceLocations = [this.foodSourceLocations [x; y]];
             return;
         end
-        
-        function inRangeParticles = getParticlesInRange(this,ant)
-            % Allocate enough space far the particles that could be
-            % in range. Then remove the space not used. This approach
-            % allocates the array just 2 times instead of *the number of
-            % particles in range*.
-            inRangeParticles = PheromoneParticle([1 length(this.pheromoneParticles)]);
-            j = 1;
-            for i = 1 : length(this.pheromoneParticles)
-                ph = this.pheromoneParticles(i);
-                if norm(ph.location - ant.location) <= ...
-                   ant.viewRange
-                    inRangeParticles(j) = ph;
-                    j = j+1;
-                end
-            end
-            inRangeParticles = inRangeParticles(1:j-1);
-        end
-        
+           
         function inRangeLandmarks = getLandmarksInRange(this,ant)
             % Allocate enough space far the landmarks that could be
             % in range. Then remove the space not used. This approach
@@ -49,21 +30,6 @@ classdef Ground
                 end
             end
             inRangeLandmarks = inRangeLandmarks(:,1:j-1);
-        end
-        
-        function [bool particle i] = hasPheromoneInLocation(this,locationPart)
-            bool = false;
-            particle = PheromoneParticle();
-            particle.intensity = 0;
-            for i = 1 : length(this.pheromoneParticles)
-                ph = this.pheromoneParticles(i);
-                if norm(ph.location - locationPart) == 0
-                    bool = true;
-                    particle = ph;
-                    return
-                end
-            end
-            i = 0;
         end
         
         function bool = isLocationAtNest(this,loc)

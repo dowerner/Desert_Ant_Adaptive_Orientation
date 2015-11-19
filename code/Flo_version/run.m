@@ -16,12 +16,6 @@ ground = ground.spawnFoodSource(3,3);
 ground = ground.spawnFoodSource(-3,-1);
 ground = ground.spawnFoodSource(-5,5);
 
-nestPh = PheromoneParticle();
-nestPh.location = nestLocation;
-nestPh.intensity = 0;
-nestPh = nestPh.setPrev(nestPh);
-ground.pheromoneParticles = nestPh;
-
 nAnts = 6;
 ants = Ant(zeros(nAnts,1));
 for i = 1 : length(ants)
