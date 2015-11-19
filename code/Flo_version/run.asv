@@ -70,11 +70,7 @@ function run(dt,printFlag)
     end
 end
 
-%**********************************************************************
 % UI handling
-%**********************************************************************
-% The following section handles all UI interactions such as closing and
-% spawing new foodsources
 
 % set hAxes variables for callback
 function setGlobalhAxes(val)
@@ -88,10 +84,10 @@ function r = getGlobalhAxes
     r = hAxes;
 end
 
-% close callback used to terminate application
+% close callback
 function onClosing(src, callbackdata)
     disp('end');
-    delete(src);
+    set(src,'CloseRequestFcn','');
     global exit
     exit = 1;
 end
