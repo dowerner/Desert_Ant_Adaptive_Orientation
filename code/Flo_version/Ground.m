@@ -16,6 +16,12 @@ classdef Ground
         
         % Removes food source if collected by ant
         function this = collectFoodSource(this, foodSourceLocation)
+           [~, count] = size(this.foodSourceLocations);
+           
+           if count == 0
+              return; 
+           end
+               
            index = 1;
            [~, count] = size(this.foodSourceLocations);
            for i = 1 : count

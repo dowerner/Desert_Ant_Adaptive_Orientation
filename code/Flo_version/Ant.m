@@ -270,9 +270,13 @@ classdef Ant
         
         % set nearest food source
         function this = updateNearestFoodSource(this, ground)
+            [~, length] = size(ground.foodSourceLocations);
+            if length == 0
+               this.nearestFoodSourceLocation = [100;100]; % set the location somewhere far away
+               return; 
+            end
             this.nearestFoodSourceLocation = ground.foodSourceLocations(:,1);
             distance = norm(this.location-ground.foodSourceLocations(1));
-            [~, length] = size(ground.foodSourceLocations);
             if length > 1
                 for i = 2 : length
                     newDistance = norm(this.location-ground.foodSourceLocations(:,i));
