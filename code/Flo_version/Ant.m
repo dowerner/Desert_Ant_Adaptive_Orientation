@@ -71,7 +71,7 @@ classdef Ant
         
         %the only function that should be called
    
-        function this = performStep(this,ground,dt)
+        function [this, ground] = performStep(this,ground,dt)
             eps = 1e-4;
 
             %don't know what this is good for, but won't work without
@@ -102,6 +102,7 @@ classdef Ant
             if strcmp(this.lookingFor, 'food') && norm(this.location-this.nearestFoodSourceLocation) < eps              
                 this.carryingFood = true;
                 this.lookingFor = 'nest';
+                ground = ground.collectFoodSource(this.nearestFoodSourceLocation);
             end
 
             %  ant puts down food and set food source as target if its

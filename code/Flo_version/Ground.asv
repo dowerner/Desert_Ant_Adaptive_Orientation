@@ -14,7 +14,6 @@ classdef Ground
             return;
         end
         
-        % Removes food source if collected by ant
         function this = collectFoodSource(this, foodSourceLocation)
            index = 1;
            [~, count] = size(this.foodSourceLocations);
@@ -23,7 +22,7 @@ classdef Ground
                   index = i;
               end
            end
-           this.foodSourceLocations(:,index) = [];
+           
         end
            
         function inRangeLandmarks = getLandmarksInRange(this,ant)

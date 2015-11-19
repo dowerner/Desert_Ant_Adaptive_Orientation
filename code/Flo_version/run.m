@@ -27,7 +27,7 @@ ground.ants = ants;
 currentPrint = 1;
 while(currentPrint == 1 || ant.location(1) >= 0) 
     for j = 1 : length(ground.ants)
-        ants(j) = ants(j).performStep(ground,dt);
+        [ants(j), ground] = ants(j).performStep(ground,dt);
         ground.ants(j) = ants(j);
     end
     cla;
