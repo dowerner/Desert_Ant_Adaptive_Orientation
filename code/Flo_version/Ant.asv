@@ -230,7 +230,18 @@ classdef Ant
             end
             
             % set nearest food source
-            this = this.updateNearestFoodSource(ground);
+            this.nearestFoodSourceLocation = ground.foodSourceLocations(1);
+            distance = norm(this.location-ground.foodSourceLocations(1));
+            [~, length] = size(ground.foodSourceLocations);
+            if length > 1
+                for i = 2 : length
+                    newDistance = norm(this.location-ground.foodSourceLocations(:,i));
+                    if newDistance < distance
+                        distance = newDistance;
+                        this.nearestFoodSourceLocation = ground.foodSourceLocations(:,i);
+                    end
+                end
+            end
         end
         
         % Navigate home using path integrator
@@ -267,8 +278,8 @@ classdef Ant
             end           
         end
         
-        % set nearest food source
         function this = updateNearestFoodSource(this, ground)
+            % set nearest food source
             this.nearestFoodSourceLocation = ground.foodSourceLocations(:,1);
             distance = norm(this.location-ground.foodSourceLocations(1));
             [~, length] = size(ground.foodSourceLocations);
@@ -316,7 +327,8 @@ classdef Ant
             this.timer = 0;
             this.timerWNoise = 0;
             this.livingTime = 300;
-            this = this.updateNearestFoodSource(ground);
+            
+            
         end
     end
 end
