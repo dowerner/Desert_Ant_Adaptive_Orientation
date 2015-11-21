@@ -3,7 +3,7 @@
 % width of the ant
 
 % constants
-k = 0.1316;
+k = 0.1316; % constant for path integrator
 
 % arguments
 
@@ -27,7 +27,7 @@ number_delta = 100;
 delta = linspace(-pi,pi,number_delta);
 
 % distribution of delta
-sigma = pi/8; % variance
+sigma = pi/8; % standard deviation
 pdf_delta = normpdf(delta,0,sigma); 
 
 % calculations of perfect and actual global vectors

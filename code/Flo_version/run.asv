@@ -14,16 +14,18 @@ function run(dt,printFlag)
     coords = [0;0];
     
     ground = Ground;
-    ground.timeLapseFactor = 10;
+    ground.timeLapseFactor = 10000;
     ground.nestLocation = nestLocation;
 
     % place food sources
-    ground = ground.spawnFoodSource(5,7);
-    ground = ground.spawnFoodSource(3,3);
-    ground = ground.spawnFoodSource(-3,-1);
-    ground = ground.spawnFoodSource(-5,5);
+    N = 5;
+    x_coord = 200*rand(1,N)-100;
+    y_coord = 200*rand(1,N)-100;
+    for k = 1:N
+        ground = ground.spawnFoodSource(x_coord(k),y_coord(k));
+    end
 
-    nAnts = 6;
+    nAnts = 1;
     ants = Ant(zeros(nAnts,1));
     for i = 1 : length(ants)
         ants(i) = Ant;
@@ -43,7 +45,7 @@ function run(dt,printFlag)
     set(hFigure, 'CloseRequestFcn', @onClosing);
     
     currentPrint = 1;
-    while(currentPrint == 1 || ant.location(1) >= 0)
+    while(currentPrint == 1)
         
         if add == 1 % add food source
            disp('new food source at:');
@@ -61,7 +63,7 @@ function run(dt,printFlag)
         end
         cla;
         hold on;
-        axis([-15 15 -15 15]);
+        axis([-100 100 -100 100]);
         title('foraging ants');
         xlabel('length [m]');
         ylabel('length [m]');
@@ -70,7 +72,11 @@ function run(dt,printFlag)
     end
 end
 
+%**********************************************************************
 % UI handling
+%**********************************************************************
+% The following section handles all UI interactions such as closing and
+% spawing new foodsources
 
 % set hAxes variables for callback
 function setGlobalhAxes(val)
@@ -84,10 +90,10 @@ function r = getGlobalhAxes
     r = hAxes;
 end
 
-% close callback
+% close callback used to terminate application
 function onClosing(src, callbackdata)
     disp('end');
-    set(src,'CloseRequestFcn','');
+    delete(src);
     global exit
     exit = 1;
 end

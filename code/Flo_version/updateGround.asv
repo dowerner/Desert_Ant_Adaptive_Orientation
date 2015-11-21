@@ -10,8 +10,8 @@ function ground = updateGround(ground,currentStep,dt,printFlag)
                  'BackgroundColor',[.78 .89 1],...
                  'FontSize',8,...
                  'HorizontalAlignment','center');
-            plot(ground.ants(i).prevLocation(1),ground.ants(i).prevLocation(2),'ko');
-            plot(ground.ants(i).globalVector(1),ground.ants(i).globalVector(2),'bo');
+            plot(ground.ants(i).location(1),ground.ants(i).prevLocation(2),'ko');
+            plot(ground.ants(i).glbalVector(1),ground.ants(i).globalVector(2),'bo');  % global vector for debugging
 
             %-- Used For Debug --%
             %--------------------%

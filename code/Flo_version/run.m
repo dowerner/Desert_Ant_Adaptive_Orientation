@@ -14,14 +14,16 @@ function run(dt,printFlag)
     coords = [0;0];
     
     ground = Ground;
-    ground.timeLapseFactor = 10;
+    ground.timeLapseFactor = 100;
     ground.nestLocation = nestLocation;
 
     % place food sources
-    ground = ground.spawnFoodSource(5,7);
-    ground = ground.spawnFoodSource(3,3);
-    ground = ground.spawnFoodSource(-3,-1);
-    ground = ground.spawnFoodSource(-5,5);
+    N = 5;
+    xCoord = 200*rand(1,N)-100;
+    yCoord = 200*rand(1,N)-100;
+    for k = 1:N
+        ground = ground.spawnFoodSource(xCoord(k),yCoord(k));
+    end
 
     nAnts = 6;
     ants = Ant(zeros(nAnts,1));
@@ -43,7 +45,7 @@ function run(dt,printFlag)
     set(hFigure, 'CloseRequestFcn', @onClosing);
     
     currentPrint = 1;
-    while(currentPrint == 1 || ant.location(1) >= 0)
+    while(currentPrint == 1)
         
         if add == 1 % add food source
            disp('new food source at:');
@@ -61,7 +63,7 @@ function run(dt,printFlag)
         end
         cla;
         hold on;
-        axis([-15 15 -15 15]);
+        axis([-100 100 -100 100]);
         title('foraging ants');
         xlabel('length [m]');
         ylabel('length [m]');
