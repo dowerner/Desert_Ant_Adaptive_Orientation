@@ -62,15 +62,11 @@ classdef Ant
 
             % ant returns so that with the time for the way home the time
             % outside the nest doesnt exceed the maximal living time.     
-            if this.velocityVector(3) > eps
-                returnZeit = (this.l)/(this.velocityVector(3));
-            else
-                returnZeit = returnTime;
-            end
+            effectReturnTime = (this.l)/(this.velocityVector(3));
             
-            if (this.timerWNoise+returnZeit-this.livingTime) > eps 
-                %if this.timer >= this.returnTime
-                this.lookingFor = 'nest';
+            %timerWNoise +effectReturnTime > livingTime ---> Return to nest
+            if (this.timerWNoise+effectReturnTime-this.livingTime) > eps 
+               this.lookingFor = 'nest';
             end
             
             if (abs(this.l) > this.maxDistance)
@@ -90,6 +86,8 @@ classdef Ant
             if strcmp(this.lookingFor, 'nest') && norm(this.location-ground.nestLocation) < eps
                 this.carryingFood = false;
                 this.lookingFor = 'food';
+                this.timer =0;
+                this.timerWNoise=0;
                 this = this.setUp(ground);
             end
 
