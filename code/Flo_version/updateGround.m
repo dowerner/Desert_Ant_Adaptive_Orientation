@@ -11,7 +11,6 @@ function ground = updateGround(ground,currentStep,dt,printFlag)
                  'FontSize',8,...
                  'HorizontalAlignment','center');
             plot(ground.ants(i).prevLocation(1),ground.ants(i).prevLocation(2),'ko');
-            plot(ground.ants(i).globalVector(1),ground.ants(i).globalVector(2),'bo');
 
             %-- Used For Debug --%
             %--------------------%

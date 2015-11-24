@@ -5,12 +5,13 @@
 speed = 1;
 N = 500;
 origin = zeros(2,N);
+sigma0 = pi/16;
 
 % distribution for one step
 dt = 1;
 stepWidth = speed*dt;
 
-delta = normrnd(0,pi/8,1,N);
+delta = normrnd(0,sigma0,1,N);
 dposition = stepWidth * [sin(delta);cos(delta)];
 position1 = origin + dposition;
 
@@ -27,7 +28,7 @@ for k = 1:number
     position2 = origin;
     mu = 0;    
     for l = 1:1/dt
-        delta = normrnd(mu,varianceFactor*pi/8,1,N);
+        delta = normrnd(mu,varianceFactor*sigma0,1,N);
         mu = delta;
         dposition = stepWidth * [sin(delta);cos(delta)];
         position2 = position2 + dposition;
@@ -61,13 +62,12 @@ ylabel('error');
 constant = c(position);
 
 % distribution for more steps
-dt = 1/8;
 stepWidth = speed*dt;
 varianceFactor = dt^constant;    
 position2 = origin;
 mu = 0;    
 for l = 1:1/dt
-    delta = normrnd(mu,varianceFactor*pi/8,1,N);
+    delta = normrnd(mu,varianceFactor*sigma0,1,N);
     mu = delta;
     dposition = stepWidth * [sin(delta);cos(delta)];
     position2 = position2 + dposition;
@@ -79,7 +79,7 @@ hold on;
 plot(position2(1,:),position2(2,:),'bo');
 hold off;
 title('position of ant after different number and size of steps');
-legend('1 step with length 1','8 steps with length 1/8');
+legend('1 step with length 1','more steps with smaller width');
 xlabel('position in x');
 ylabel('position in y');
 axis([-1,1,-1,1]);

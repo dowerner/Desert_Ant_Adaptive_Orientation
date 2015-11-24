@@ -9,9 +9,15 @@ classdef Ground
     
     methods
         
+        % adds a food source at location (x,y)
         function this = spawnFoodSource(this, x, y)
             this.foodSourceLocations = [this.foodSourceLocations [x; y]];
-            return;
+        end
+        
+        % adds a landmark at location (x,y)
+        function this = spawnLandmark(this, x, y)
+            landmark = Landmark(x,y);
+            this.landmarks = [this.landmarks landmark];
         end
         
         % Removes food source if collected by ant
@@ -32,22 +38,38 @@ classdef Ground
            this.foodSourceLocations(:,index) = [];
         end
            
+        % gets all the landmarks in sight of the ant
         function inRangeLandmarks = getLandmarksInRange(this,ant)
-            % Allocate enough space far the landmarks that could be
-            % in range. Then remove the space not used. This approach
-            % allocates the array just 2 times instead of *the number of
-            % landmarks in range*.
-            inRangeLandmarks = zeros(size(this.landmarks));
+            inRangeLandmarks = Landmark(zeros(size(this.landmarks)));
             j = 1;
-            for i = 1 : size(this.landmarks,2)
-                lm = this.landmarks(:,i);
-                if norm(lm - ant.location) <= ...
-                   ant.viewRange
-                    inRangeLandmarks(:,j) = lm;
+            for i = 1 : length(this.landmarks)
+                landmark = this.landmarks(i);
+                if norm(landmark.location - ant.location) <= ant.viewRangeLandmarks
+                    inRangeLandmarks(j) = landmark;
                     j = j+1;
                 end
             end
-            inRangeLandmarks = inRangeLandmarks(:,1:j-1);
+            inRangeLandmarks = inRangeLandmarks(1:j-1);
+        end
+        
+        % gets the nearest landmark from all the landmarks in sight of the
+        % ant
+        function nearestLandmark = getNearestLandmark(this,ant)
+            inRangeLandmarks = getLandmarksInRange(this,ant);
+            if ~isempty(inRangeLandmarks)
+                nearestLandmark = inRangeLandmarks(1);
+                minDistance = distanceBetweenTwoPoints(nearestLandmark.location,ant.location);
+                for i = 2 : length(inRangeLandmarks)
+                    landmark = inRangeLandmarks(i);
+                    distance = distanceBetweenTwoPoints(landmark.location,ant.location);
+                    if distance <= minDistance
+                       nearestLandmark = landmark;
+                       minDistance = distance;
+                    end
+                end
+            else
+                nearestLandmark.status = nan;
+            end
         end
         
         function bool = isLocationAtNest(this,loc)

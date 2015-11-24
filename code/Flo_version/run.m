@@ -1,6 +1,6 @@
 function run(dt,printFlag)
     if nargin == 0
-        dt = 0.1;
+        dt = 0.2;
         printFlag = false;
     end
 
@@ -14,7 +14,7 @@ function run(dt,printFlag)
     coords = [0;0];
     
     ground = Ground;
-    ground.timeLapseFactor = 100;
+    ground.timeLapseFactor = 10000;
     ground.nestLocation = nestLocation;
 
     % place food sources
@@ -24,12 +24,22 @@ function run(dt,printFlag)
     for k = 1:N
         ground = ground.spawnFoodSource(xCoord(k),yCoord(k));
     end
-
+    
+    % place landmarks
+    distanceToNest = 8;
+    nLandmarks = 3;
+    landmarks = Landmark(zeros(nLandmarks,1));
+    landmarks(1) = landmarks(1).setUp(0.1,distanceToNest);
+    landmarks(2) = landmarks(2).setUp(sin(pi/3)*distanceToNest, -cos(pi/3)*distanceToNest);
+    landmarks(3) = landmarks(3).setUp(-sin(pi/3)*distanceToNest, -cos(pi/3)*distanceToNest);
+    ground.landmarks = landmarks;
+    
+    % place ants
     nAnts = 6;
     ants = Ant(zeros(nAnts,1));
     for i = 1 : length(ants)
         ants(i) = Ant;
-        ants(i) = ants(i).setUp(ground);
+        ants(i) = ants(i).setUp(ground,dt);
     end
     ground.ants = ants;
 

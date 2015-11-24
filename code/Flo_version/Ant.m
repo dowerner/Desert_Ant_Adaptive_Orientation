@@ -4,17 +4,16 @@ classdef Ant
         location % Position in absolute coordinates
         velocityVector % Vector [Vx Vy speed]
         carryingFood % Bool
-        landmarkRecognized % Bool
-        viewRange % How far an ants can "see"
-        limitSearchDistance % After what distance from a landmark pattern
-                            % stop to search.
+        walkDirectlyHome % Bool
+        viewRange % How far an ants can "see" food sources and the nest
+        viewRangeLandmarks % How far an ant can see landmarks
+        nearestLandmark % nearest landmark to position of ant
+        stepsToFollow % number of steps the ant can walk in specific direction after passing a landmark 
         globalVector % Vector pointing directly to the nest
         phi % Part to implement the "global vector" in a more
             % realistic way. phi represent an angle.
         l   % The second part needed for what is described above.
             % l represent the total length walked till now.
-        storedLandmarksMap % A map from a landmark pattern to a 
-                           % local angle to follow.
         lookingFor % String witch says what the ant is looking for.
         
         startangle % angle with ant leaves the nest
@@ -25,10 +24,7 @@ classdef Ant
         searchRadius % radius around lost distance in which the ant will be searching
         
         timer % time ellapsed since the ant has left the nest
-        timerWNoise % timer with some white noise
-       % returnTime % time after which the ant has to return to the nest
-       % Neu wird die returnTime aus Distanz und Geschwindigkeit und
-       % livingTime berechnet
+        timerWError % timer with some white noise
         livingTime % time after which the ant dies of overheating
         nearestFoodSourceLocation % nearest food source to ant
     end
@@ -62,10 +58,11 @@ classdef Ant
 
             % ant returns so that with the time for the way home the time
             % outside the nest doesnt exceed the maximal living time.     
-            effectReturnTime = (this.l)/(this.velocityVector(3));
+            effectReturnTime = this.l/this.velocityVector(3);
             
-            %timerWNoise +effectReturnTime > livingTime ---> Return to nest
-            if (this.timerWNoise+effectReturnTime-this.livingTime) > eps 
+            %timerWNoise + effectReturnTime timeSecurity > livingTime ---> Return to nest
+            timeSecurity = 20;
+            if (this.timerWError + effectReturnTime + timeSecurity - this.livingTime) > 0  
                this.lookingFor = 'nest';
             end
             
@@ -78,35 +75,62 @@ classdef Ant
             if strcmp(this.lookingFor, 'food') && norm(this.location-this.nearestFoodSourceLocation) < eps              
                 this.carryingFood = true;
                 this.lookingFor = 'nest';
-                ground = ground.collectFoodSource(this.nearestFoodSourceLocation);
+                ground = ground.collectFoodSource(this.nearestFoodSourceLocation);   
             end
-
+            
             %  ant puts down food and set food source as target if its
             %  location is at nest
-            if strcmp(this.lookingFor, 'nest') && norm(this.location-ground.nestLocation) < eps
-                this.carryingFood = false;
-                this.lookingFor = 'food';
-                this.timer =0;
-                this.timerWNoise=0;
-                this = this.setUp(ground);
+            if strcmp(this.lookingFor, 'nest') && norm(this.location - ground.nestLocation) < eps
+                this = this.setUp(ground,dt);
             end
-
-            % ant moves to food source or to nest
+            
+            % ant looks for nearest landmark if in sight and if nest is not
+            % nearer
+            this.nearestLandmark = ground.getNearestLandmark(this);
+            if ~isnan(this.nearestLandmark.status)
+                if strcmp(this.lookingFor,'nest') && ... 
+                        distanceBetweenTwoPoints(this.nearestLandmark.location,this.location) < this.l && ...
+                        ~this.walkDirectlyHome
+                    this.lookingFor = 'landmark';
+                end
+            end
+            
+            % ant walks directly towards the nest if it is at landmark
+            if strcmp(this.lookingFor, 'landmark') && norm(this.location - this.nearestLandmark.location) < eps
+                this.lookingFor = 'nest';
+                this.walkDirectlyHome = 1;
+                this.velocityVector(1:2) = this.nearestLandmark.direction;
+            end              
+                
+            % ant moves to food source or to nest or to landmark
             if strcmp(this.lookingFor, 'food')
                 if norm(this.nearestFoodSourceLocation-this.location) < this.viewRange
                     this = this.stepStraightTo(this.nearestFoodSourceLocation,dt);
                 else
                     this = this.takeRandomStep(dt);
                 end
-            elseif strcmp(this.lookingFor, 'nest')
+            elseif strcmp(this.lookingFor, 'nest') && ~this.walkDirectlyHome
                 this = this.returnHomeUsingPathIntegrator(ground, dt);
+            elseif strcmp(this.lookingFor, 'landmark')
+                this = this.stepStraightTo(this.nearestLandmark.location,dt);
+            
+            % ant walks directly home along a specific direction
+            elseif this.walkDirectlyHome == 1
+                this = this.updateLocation(dt);  
+                this.stepsToFollow = this.stepsToFollow - 1;
             end
             
             this.timer = this.timer + dt;
-            %Adding some white noise to the timer
-            this.timerWNoise = this.timerWNoise + randn(1,1) + dt;
+            % Adding gaussian distributed error to the timer
+            this.timerWError = this.timerWError + dt*(1 + 0.1*randn(1,1));
             this = this.updateGlobalVector(ground);   
-             % set nearest food source
+            
+            % stop following path when stepsToFollow == 0
+            if this.stepsToFollow == 0
+                this.walkDirectlyHome = 0;
+            end
+            
+            % set nearest food source
             this = this.updateNearestFoodSource(ground);
         end
   
@@ -125,8 +149,10 @@ classdef Ant
         
         % ant performs random step
         function this = takeRandomStep(this, dt)
-           factor = 2^(-(1/dt-1)/2); % variance gauge
-           varphi = normrnd(0,factor*pi/4);
+           c = 0.3;
+           factor = dt^c; % variance gauge
+           sigma0 = pi/16;
+           varphi = normrnd(0,factor*sigma0);
            this.velocityVector(1:2) = [cos(varphi) -sin(varphi) ; sin(varphi) cos(varphi)]*this.velocityVector(1:2);
            this = this.updateLocation(dt);
         end
@@ -147,7 +173,7 @@ classdef Ant
                 if norm(ground.nestLocation-this.location) < this.viewRange
                     this = this.stepStraightTo(ground.nestLocation,dt);
                 else
-                    this = this.stepStraightTo(this.location-this.globalVector,dt);
+                    this = this.stepStraightTo(this.globalVector-this.location,dt);
                 end
             end
         end
@@ -159,7 +185,6 @@ classdef Ant
                 this = this.stepStraightTo(center,dt);
             else
                 this = this.takeRandomStep(dt);
-                this = this.updateLocation(dt);
             end           
         end
         
@@ -229,7 +254,7 @@ classdef Ant
         end
         
         % Build an ant
-        function this = setUp(this,ground)
+        function this = setUp(this,ground,dt)
             v = ([rand;rand]).*2-1;
             v = v./norm(v);
             v = [v;1];
@@ -238,22 +263,23 @@ classdef Ant
             this.startangle = vector2angle(v);
             thi.phi = vector2angle(v);
             this.velocityVector = v;
-            this.carryingFood = 0;           
-            this.landmarkRecognized = false;
+            this.carryingFood = 0;   
+            this.walkDirectlyHome = 0;
             this.viewRange = 2;
+            this.viewRangeLandmarks = 5;
+            this.nearestLandmark = Landmark;
             this.globalVector = [0;0];
-            this.storedLandmarksMap = [];
             this.lookingFor = 'food';
             this.prevLocation = nan;
             this.location = ground.nestLocation;
             this.phi = vector2angle(this.velocityVector);
+            this.searchRadius = 8;
             this.l = 0;
-            this.storedLandmarksMap = Hashtable;
             this.lostPosition = nan;
-            this.searchRadius = 4;
+            this.stepsToFollow = floor( norm(ground.landmarks(1).location)/(dt*this.velocityVector(3)) );
             this.timer = 0;
-            this.timerWNoise = 0;
-            this.livingTime = 300;
+            this.timerWError = 0;
+            this.livingTime = 100;
             this = this.updateNearestFoodSource(ground);
         end
     end
