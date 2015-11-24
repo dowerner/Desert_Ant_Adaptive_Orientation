@@ -60,7 +60,7 @@ classdef Ant
             % outside the nest doesnt exceed the maximal living time.     
             effectReturnTime = this.l/this.velocityVector(3);
             
-            %timerWNoise + effectReturnTime timeSecurity > livingTime ---> Return to nest
+            %timerWError + effectReturnTime timeSecurity > livingTime ---> Return to nest
             timeSecurity = 20;
             if (this.timerWError + effectReturnTime + timeSecurity - this.livingTime) > 0  
                this.lookingFor = 'nest';
