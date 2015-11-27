@@ -22,7 +22,8 @@ function run(dt,printFlag)
     xCoord = 200*rand(1,N)-100;
     yCoord = 200*rand(1,N)-100;
     for k = 1:N
-        ground = ground.spawnFoodSource(xCoord(k),yCoord(k));
+        ground.spawnFoodSource(xCoord(k),yCoord(k));    % WRONG: Has no effect
+        ground = ground.spawnFoodSource(xCoord(k),yCoord(k));   % CORRECT: Update gets written
     end
     
     % place landmarks
@@ -56,6 +57,8 @@ function run(dt,printFlag)
     
     currentPrint = 1;
     while(currentPrint == 1)
+        % set timestamt
+        tic;
         
         if add == 1 % add food source
            disp('new food source at:');
@@ -79,6 +82,15 @@ function run(dt,printFlag)
         ylabel('length [m]');
         ground = updateGround(ground,length(ants),dt,printFlag);
         drawnow;
+        
+        % a pause so that according to the timeLapseFactor a step in
+        % realtime takes ONE second.
+        timeToWait = 1-toc;
+
+        if timeToWait < 0
+            timeToWait = 1;
+        end
+        pause(timeToWait*(ground.timeLapseFactor)^(-1)-0.002);
     end
 end
 

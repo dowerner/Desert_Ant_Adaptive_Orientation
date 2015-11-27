@@ -1,7 +1,4 @@
 function ground = updateGround(ground,currentStep,dt,printFlag)
-    % set timestamt
-    tic;
-    
     try % for some reason the ant array can have less entries that get counted
         % Update the ants pixels
         for i = 1 : length(ground.ants)
@@ -55,13 +52,4 @@ function ground = updateGround(ground,currentStep,dt,printFlag)
                 zeroStr,int2str(currentStep),'.png'),...
               '-dpng');
     end
-    
-    % a pause so that according to the timeLapseFactor a step in
-    % realtime takes ONE second.
-    timeToWait = 1-toc;
-    
-    if timeToWait < 0
-        timeToWait = 1;
-    end
-    pause(timeToWait*(ground.timeLapseFactor)^(-1)-0.002);
 end

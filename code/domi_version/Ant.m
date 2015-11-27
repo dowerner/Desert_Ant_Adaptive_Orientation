@@ -80,21 +80,6 @@ classdef Ant
             end
         end
         
-        function this = followPheromonePath(this,ground,dt)
-            [bool, particle] = ground.hasPheromoneInLocation(this.location);
-            if bool
-                if this.carryingFood
-                    this.prevLocation = this.location;
-                    this.location = particle.next.location;
-                else
-                    this.prevLocation = this.location;
-                    this.location = particle.prev.location;
-                end
-            else
-                this = this.randomWalkStep(ground,dt);
-            end
-        end
-        
         function this = takeRandomStep(this, dt)
            varphi =(rand(1,1)-0.5)*pi/6;
            this.velocityVector(1:2) = [cos(varphi) -sin(varphi) ; sin(varphi) cos(varphi)]*this.velocityVector(1:2);
