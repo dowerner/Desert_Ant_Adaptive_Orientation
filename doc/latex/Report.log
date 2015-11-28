@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.8.28)  26 OCT 2015 10:03
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.8.28)  28 NOV 2015 14:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -760,21 +760,49 @@ Now handling font encoding U ...
    defining Unicode char U+2026 (decimal 8230)
    defining Unicode char U+2122 (decimal 8482)
    defining Unicode char U+2423 (decimal 9251)
-)) (./Report.aux)
+))
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count133
+\lst@gtempboxa=\box45
+\lst@token=\toks35
+\lst@length=\count134
+\lst@currlwidth=\dimen174
+\lst@column=\count135
+\lst@pos=\count136
+\lst@lostspace=\dimen175
+\lst@width=\dimen176
+\lst@newlines=\count137
+\lst@lineno=\count138
+\lst@maxwidth=\dimen177
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2013/08/26 1.5b (Carsten Heinz)
+\c@lstnumber=\count139
+\lst@skipnumbers=\count140
+\lst@framebox=\box46
+)
+(/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2013/08/26 1.5b listings configuration
+))
+Package: listings 2013/08/26 1.5b (Carsten Heinz)
+
+(/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2013/08/26 1.5b listings language file
+) (./Report.aux)
 \openout1 = `Report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 64.
+LaTeX Font Info:    ... okay on input line 64.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -812,18 +840,20 @@ LaTeX Font Info:    ... okay on input line 35.
 
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count133
-\scratchdimen=\dimen174
-\scratchbox=\box45
-\nofMPsegments=\count134
-\nofMParguments=\count135
-\everyMPshowfont=\toks35
-\MPscratchCnt=\count136
-\MPscratchDim=\dimen175
-\MPnumerator=\count137
-\makeMPintoPDFobject=\count138
-\everyMPtoPDFconversion=\toks36
-) ABD: EveryShipout initializing macros (./cover.tex
+\scratchcounter=\count141
+\scratchdimen=\dimen178
+\scratchbox=\box47
+\nofMPsegments=\count142
+\nofMParguments=\count143
+\everyMPshowfont=\toks36
+\MPscratchCnt=\count144
+\MPscratchDim=\dimen179
+\MPnumerator=\count145
+\makeMPintoPDFobject=\count146
+\everyMPtoPDFconversion=\toks37
+) ABD: EveryShipout initializing macros
+\c@lstlisting=\count147
+ (./cover.tex
 Package epstopdf Info: Source file: <ETHlogo.eps>
 (epstopdf)                    date: 2015-10-16 06:47:57
 (epstopdf)                    size: 179075 bytes
@@ -854,12 +884,12 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./ETHlogo-eps-converted-to
 .pdf>]
-Overfull \hbox (5.3226pt too wide) in paragraph at lines 60--73
+Overfull \hbox (5.3226pt too wide) in paragraph at lines 89--102
  [] 
  []
 
 
-Overfull \hbox (5.3226pt too wide) in paragraph at lines 80--92
+Overfull \hbox (5.3226pt too wide) in paragraph at lines 109--121
  [][] 
  []
 
@@ -868,53 +898,113 @@ Overfull \hbox (5.3226pt too wide) in paragraph at lines 80--92
 \openout4 = `Report.toc'.
 
  [3] [4]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 127.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 156.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 127.
- [5]
-Underfull \hbox (badness 10000) in paragraph at lines 173--177
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 156.
+
+Underfull \hbox (badness 10000) in paragraph at lines 185--188
 
  []
 
-[6] (./Report.bbl)
+[5] [6] <./Pics/uml.png, id=41, 1193.96063pt x 660.21657pt>
+File: ./Pics/uml.png Graphic file (type png)
 
-Package natbib Warning: Citation `Wehner2008' undefined on input line 239.
+<use ./Pics/uml.png>
+Package pdftex.def Info: ./Pics/uml.png used on input line 246.
+(pdftex.def)             Requested size: 417.89249pt x 231.07925pt.
+ [7 <./Pics/uml.png (PNG copy)>] (./Code/copies.m
+
+LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <8> not available
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 1.
+
+)
+Overfull \hbox (18.40486pt too wide) in paragraph at lines 2--264
+[][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
+ []
+
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 321--351
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--351
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--351
+
+ []
+
+[9] [10] [11] (./Code/run.m) (./Code/distanceBetweenTwoPoints.m)
+(./Code/vector2angle.m) (./Code/updateGround.m) (./Code/Landmark.m)
+(./Code/Ground.m) (./Code/Ant.m) [1] [2]
+Underfull \hbox (badness 10000) in paragraph at lines 402--403
+
+ []
+
+<./RWehner.png, id=67, 522.5121pt x 361.35pt>
+File: ./RWehner.png Graphic file (type png)
+ <use ./RWehner.png>
+Package pdftex.def Info: ./RWehner.png used on input line 407.
+(pdftex.def)             Requested size: 418.01024pt x 289.0804pt.
+
+Overfull \hbox (5.00562pt too wide) in paragraph at lines 407--408
+[][] 
+ []
+
+(./Report.bbl
+! Undefined control sequence.
+l.19 \url
+         {http://ch.mathworks.com/help/matlab/numeric-types.html}.
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+)
+
+Package natbib Warning: Citation `Wehner2008' undefined on input line 417.
 
 
 Package natbib Warning: There were undefined citations.
 
-[7] (./Report.aux) ) 
+[3 <./RWehner.png>] (./Report.aux) ) 
 Here is how much of TeX's memory you used:
- 14128 strings out of 494976
- 245795 string characters out of 6179137
- 328933 words of memory out of 5000000
- 17040 multiletter control sequences out of 15000+600000
- 14479 words of font info for 56 fonts, out of 8000000 for 9000
+ 16412 strings out of 494976
+ 274790 string characters out of 6179137
+ 396535 words of memory out of 5000000
+ 19274 multiletter control sequences out of 15000+600000
+ 15742 words of font info for 60 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 63i,18n,76p,779b,679s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmb
-x12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pf
-b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr
-/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.
-pfb>
-Output written on Report.pdf (7 pages, 179446 bytes).
+ 63i,18n,76p,779b,1702s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></u
+sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmssi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmti12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt
+12.pfb>
+Output written on Report.pdf (14 pages, 425681 bytes).
 PDF statistics:
- 90 PDF objects out of 1000 (max. 8388607)
- 65 compressed objects within 1 object stream
+ 124 PDF objects out of 1000 (max. 8388607)
+ 87 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 18 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 28 words of extra memory for PDF output out of 10000 (max. 10000000)
 

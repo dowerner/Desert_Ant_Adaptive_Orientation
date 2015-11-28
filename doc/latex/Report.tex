@@ -17,7 +17,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %Additinal packages ants in the pants
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
 \usepackage[]{algorithm2e}
 \usepackage{todonotes}
 \usepackage[german]{babel}
@@ -43,8 +44,10 @@ numberstyle=\sffamily\scriptsize\color{lightgray}
 } 
 
 
+%\renewcommand{\figurename}{Bild}
 
 
+%\addto\captionsngerman{\renewcommand{\figurename}{Bild}}
 
 
 
@@ -59,7 +62,7 @@ numberstyle=\sffamily\scriptsize\color{lightgray}
 
 
 \begin{document}
-
+\renewcommand{\figurename}{Figure}
 
 \input{cover}
 \newpage
@@ -139,8 +142,8 @@ numberstyle=\sffamily\scriptsize\color{lightgray}
 \section{Abstract}
 The Desert Ant (Cataglyphis) is an interesting creature. It lives in the desert where conditions are very harsh. Being to long outside of its nest the ant will die due to the ambient heat, therefore it is more than vital for the ant's survival that it has a sophisticated way to navigate through the pans of sand that make out most of its habitat. Since the early 20th century biologists have been fascinated by this ant and its navigation through the desert. Recently there has been speculation about the methods that are utilized by these ants to navigate between sources of food and their nest. If we could reproduce the path-pattern observed by real ants with a model we would be able to predict how they would react if something would change in their ecosystem.
 We will base our work upon an essays written by R. Wehner \cite{Wehner2003},\cite{Wehner1988}, \cite{Wehner1998}.\\
- In his work he suggests 3 methods of navigation which the ants can use, namely pathintegration, pheromones and visual landmark recognition. In his final conclusion he considers all 3 methods important and assumes that the ant has a way of adopting the priority of each mechanism according to the current situation.
-In Previous years a group called gordonteam\cite{GordonTeam2008} already implemented a model based on the before mentioned article. In the report they noted that their path integration did not work and that they were not able to combine all 3 methods. Our plan is to extend upon their work and fix the problems as well as to bind all 3 methods together. Furthermore we want to implement a memory system along with a learning machine which will allow the ant to dynamically adapt to an environment.
+ In his work he suggests 3 methods of navigation which the ants can use, namely pathintegration and visual landmark recognition. In his final conclusion he considers both methods important and assumes that the ant has a way of adopting the priority of each mechanism according to the current situation.
+In Previous years a group called gordonteam\cite{GordonTeam2008} already implemented a model based on the before mentioned article. In the report they noted that their path integration did not work and that they were not able to combine all  methods. Our plan is to extend upon their work and fix the problems as well as to bind all methods together. Furthermore we want to implement a memory system along with a learning machine which will allow the ant to dynamically adapt to an environment.
 
 
 
@@ -152,7 +155,6 @@ As mentioned the desert ant's main means of orientation are:
 \begin{itemize}
 \item pathintegration
 \item local landmark orientation
-\item pheromones
 \end{itemize}
 The pathintegration and the local landmark orientation are primarily used in order to get back to the nest from a food source, whereas the orientation by pheromones is mainly used to find a prelocated food source. \todo{in an educated guess check. Email an R. Wehner.}
 
@@ -175,28 +177,11 @@ $l$ and $\varphi$ are constantly updated and together they form the \textit{glob
 \subsubsection{Local landmark orientation }
 The ants can make use of landmark orientations. They can recreate a certain route by memorizing given landmarks in the correct sequence.
 
-\subsubsection{Pheromone orientation}
-Having found a food source the secretion becomes more intense. Other ants are attracted to the pheromones of their conspecifics and are therefore guided to the foodsource and thereby pheromone trace is further augmented. Once the foodsource is depleted the ants fan out and the pheromone evaporates exponentially GordonTeam2008\cite{GordonTeam2008} \footnote{on page 9}.
-
- \begin{align*}
- I(t)=I(t - \Delta t) \exp (\frac{\log (\frac{1}{2}) \Delta  t}{t_{c}})\Delta t 
- \end{align*}
- 
- 
- 
- %$I(t)=I(t - \Delta t) \exp (\frac{a}{b})\Delta t $
 
 
 
 
-
-
-
-
-
-
-\subsubsection{Combination}
-As mentioned the pheromone orientation is used as a mean to find a food source not a mean to return back to their nest.\todo{Nochmals klären ob das Stimmt.}
+\subsubsection{Combination} \label{Sec:Combination}
 It is not that the various means of orientations are combined in a weighted fashion. Given certain criteria the different means are used separately.\\
 The results gained R. Wehner's experiments indicate that ants use predominantly pathintegration, but if available using local landmarks is more preferable to using the global vector-navigation via pathintegration. It has been concluded that the ant transiently inhibits the global vector when being in familiar territory. The global vector only reemerges after the local vector ceases. Whilst navigating via the local vector the global vector is continuously updated.
 \\ \
@@ -251,13 +236,176 @@ The results gained R. Wehner's experiments indicate that ants use predominantly 
 \section{Description of the Model}
 
 \section{Implementation}
+To implement our agent based model we decided to use object orientated programming because it
+seemed more intuitive than a procedural approach in this case.
+\subsection{UML-Diagram}
+The following graphic shows the UML-Class diagram that describes the data model of our project.
+The files run.m, updateGround.m, vector2angle.m and distanceBetweenTwoPoints.m are not part of
+this diagram since they are procedural functions and not classes.
+\begin{figure}[h]
+\includegraphics[scale=0.35]{./Pics/uml.png} 
+\caption[UML]{UML}
+\end{figure} \\
+This diagram shows the classes of the project and how they are related. Since Matlab does not
+support information hiding the public/private information is missing in the diagram. Because
+ Matlab uses matrices in many cases all data-types with the exceptions of bool, string, Ant, Ground
+and Landmark are matrices of type double \footnote{ Mathworks2015\cite{Mathworks2015}}  as entries:
+\begin{itemize}
+\item vector2: double(2,1)
+\item vector3: double(3,1)
+\item vector2[]: double(2, n)
+\item number: double(1,1)
+\end{itemize}
+Something else to be mentioned is that Matlab does not make use of pointers but instead copies
+instances of objects and does not alter the original. This means that in order for a method that is
+supposed to alter an object the original object has to be overwritten. This can be done by letting
+methods return the object that is containing them (this).
+
+\lstinputlisting[captionpos=b,caption=copies,label="copies"]{./Code/copies.m}
+For this reason nearly every method does return the object it belongs to as a result.
+
+\subsection{Source Code}
+To shed some light on how we implemented the model we will quickly describe the source code.
+The object orientated approach made it possible to implement new ideas relatively fast at the correct
+location.
+\subsubsection{run.m}
+[Listing \ref{"list:run.m"} in \ref{run}].This file does all the parametrization and executes the setup methods of the various classes utilized
+in this project. It is supposed to be used as an easy way to alter the setup if the need arises.\\
+The file contains the before mentioned setup section, followed by the execution section where the
+main-loop does update the ground and the ants objects. Also inside of the main-loop one can find
+the time handling. At the beginning of each iteration a timestamp is saved and then used at the end
+of the iteration to pause the execution in order to have a uniform speed throughout the running time
+of the program.\\
+The last section of the file does handle callback-functions from the user interface. The user interface
+in our case is the plot that opens and displays the various agents moving in the world. The user
+interface provides the following functions:
+
+\begin{itemize}
+\item \textbf{Spawn new food source:} New sources of food for the ants to collect can be spawned by
+simply clicking at the location in the world were the source should appear.
+\item \textbf{Close:} In order for the program to terminate without errors we used a callback-function
+from closing event of our plot-figure to terminate the program.
+\end{itemize}
 
 
-\lstinputlisting[captionpos=b,caption=Beispiel,label="Label_Beispiel"]{./Code/Beispiel.m}
+
+
+
+
+
+
+\subsubsection{distanceBetweenTwoPoints.m}
+[Listing \ref{"distanceBetweenTwoPoints.m"} in \ref{distancebetweenTwoPoints}]. A simple helper function which calculates the distance between two points.
+
+
+\subsubsection{vector2angle.m}
+[Listing \ref{"list:vector2angle.m"} in \ref{vector2angle}]. This helper function calculates the angle of a given vector in radians. The value of the result ranges from 0 to 2 pi. This is important in order for the path integrator to work correctly. Additional corrections (to use the acute and not obtuse angle) are done in Ant.m. 
+
+
+\subsubsection{updateGround.m}
+[Listing \ref{"list:updateGround.m"} in \ref{updateGround}]. This function does not change anything on the Ground object as its name might suggest. This
+method does update the plot and redraws all ants, food sources, the nest and the landmarks.
+
+
+\subsubsection{Landmark.m}
+[Listing \ref{"list:Landmark.m"} in \ref{Landmark}]. This class represents a visual landmark. It is defined as having a location, a direction vector and a
+status which is represented by a number. The direction vector is used by incoming ants to leave the
+landmark in the direction provided by the landmark. This is supposed to mimic the ants procedural
+memory.
+
+\subsubsection{Ground.m}
+[Listing \ref{"list:Ground.m"} in \ref{Ground}]. This class serves as container for all agents and the objects they can interact with. Besides its function as a container it also provides methods to spawn new food sources and landmarks in the world as well as various methods which can determine the proximity of a certain target. 
+
+
+\subsubsection{Ant.m}
+[Listing \ref{"List:Ant.m"} in \ref{Ant}].This class represents our agent and implements the mathematical model proposed by R. Wehner \cite{Wehner1988}. The model is implemented pretty straight forward with a few exceptions. Because
+our ants aren't real and do not have a limited field of view but can see 360 degrees we had to create
+a property which tells the ant if it is leaving the nest so it doesn't immediately go back to the nest
+after it left it. This is due to the assumption that foraging ants that come across their nest during
+their searches, reset their global vector to correct errors or in other words, they will use the local
+vector rather than the global vector (as described in  \ref{Sec:Combination}) . Furthermore we have a much more mathematical problem
+when we are near the nest. Because we divide by the length of our global vector we cause a division
+by zero in our update method once the global vectors length becomes zero. To avoid this we
+actually wait until the nest is outside of the ants view distance and set the length of the global vector
+to the view distance. It is reasonable to assume that the real ants do something similar because of
+the before mentioned local vector.\\
+\ \\
+Also important is the method that takes a random step. The math behind this method is discussed in
+detail in another chapter here we just describe the implementation. The implementation is basically
+the math plus the calling of the update method to set the ants position after the calculation is done.\\
+\ \\
+As described above the ants vision was simplified for the implementation and a field of view is not
+implemented. Once the ant is within view distance of an object (food source, landmark, nest) it
+steps straight towards it (local vector). The decision if the ant has reached its target is made by
+checking the length of the difference vector between the ant's location and the target. Once the
+length is smaller than a certain threshold value the ant has reached its target. Since it is possible to
+have many different food sources as well as landmarks we implemented methods which update the
+properties nearestFoodSourceLocation and nearestLandmark. Those two properties are then used
+for the comparison. It is also important to note that the landmarks are visible from further away than
+food sources or the nest.\\
+\ \\
+Real ants cannot stay outside for too long because they would die in the heat of the desert. We
+implemented a timer that every ant updates (with a small, random error) which tells the ant when it
+has to return to the nest during its search for food. If an ant does not reach the nest in time it will
+stop moving thus being dead.
+
+
+
+
+
+
+
+
+
+%\includegraphics[width=5cm]{uml.png}
+
+
+
+%\lstinputlisting[captionpos=b,caption=Beispiel,label="Label_Beispiel"]{./Code/Beispiel.m}
 
 \section{Simulation Results and Discussion}
 
 \section{Summary and Outlook}
+\newpage
+\appendix
+\section{Appendix}
+
+\pagenumbering{roman}   % Macht Seitenzahl römisch
+
+
+
+
+
+\subsection{run.m} \label{run}
+\lstinputlisting[captionpos=b,caption=run.m,label="list:run.m"]{./Code/run.m}
+
+\subsection{distanceBetweenTwoPoints.m}\label{distancebetweenTwoPoints}
+\lstinputlisting[captionpos=b,caption=distanceBetweenTwoPoints.m,label="distanceBetweenTwoPoints.m"]{./Code/distanceBetweenTwoPoints.m}
+\subsection{vector2angle.m}\label{vector2angle}
+\lstinputlisting[captionpos=b,caption=vector2angle.m,label="list:vector2angle.m"]{./Code/vector2angle.m}
+\subsection{updateGround.m}\label{updateGround}
+\lstinputlisting[captionpos=b,caption=updateGround.m,label="list:updateGround.m"]{./Code/updateGround.m}
+\subsection{Landmark.m}\label{Landmark}
+\lstinputlisting[captionpos=b,caption=Landmark.m,label="list:Landmark.m"]{./Code/Landmark.m}
+\subsection{Ground.m}\label{Ground}
+\lstinputlisting[captionpos=b,caption=Ground.m,label="list:Ground.m"]{./Code/Ground.m}
+\subsection{Ant.m}\label{Ant}
+\lstinputlisting[captionpos=b,caption=Ant.m,label="List:Ant.m"]{./Code/Ant.m}
+
+
+
+
+\newpage
+
+
+\section{Correspondence}
+R. Whener ,author of \cite{Wehner2003},\cite{Wehner1988}, \cite{Wehner1998} kindly answered us a few questions.\\
+
+
+
+
+\includegraphics[scale=0.8]{./RWehner.png}%
+
 
 \section{References}
 %-------------------------------------Bibliographie-------------------------------------
@@ -270,6 +418,7 @@ The results gained R. Wehner's experiments indicate that ants use predominantly 
 \nocite{Wehner2003}
 \nocite{Wehner1988}
 \nocite{GordonTeam2008}
+\nocite{Mathworks2015}
 %\nocite{Gebert2001}
 \thispagestyle{plain}
 
