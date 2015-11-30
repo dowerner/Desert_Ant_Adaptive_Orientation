@@ -14,7 +14,7 @@ dl = ( l(end)-l(1) ) / number_l;
 
 % distance from the nest
 number_L = 100; 
-L = linspace(0.1,100,number_L);
+L = linspace(0.1,5,number_L);
 dL = ( L(end)-L(1) ) / number_L;
 
 % [length(L), length(l)] - matrices for calculations
@@ -27,7 +27,7 @@ number_delta = 100;
 delta = linspace(-pi,pi,number_delta);
 
 % distribution of delta
-sigma = pi/8; % standard deviation
+sigma = pi/16; % standard deviation
 pdf_delta = normpdf(delta,0,sigma); 
 
 % calculations of perfect and actual global vectors
@@ -45,7 +45,7 @@ for d = delta
             ./ sqrt(id+(l_r./L_r).^2+2*(l_r./L_r).*cos(d)) );
         
         % actual integrator from the paper
-        L_actual(:,:,position) = L_r + l_r.*(id-2*abs(d))/pi;
+        L_actual(:,:,position) = L_r + l_r.*(id-2*abs(d)/pi);
         phi_actual(:,:,position) = k*(pi-d).*(pi+d).*d ./ (L_r./l_r);
         
 end
@@ -71,10 +71,14 @@ end
 
 E = trapezIntegration(integrand, delta);
 
+
 % plot
 figure
-[stepWidth, distance] = meshgrid(l, L);
-mesh(stepWidth, distance, abs(E));
-title('expected value of error of the global vector');
-xlabel('step width');
-ylabel('distance from nest');
+[deltaGrid, stepWidth] = meshgrid(delta, l);
+
+mesh(l_r, L_r, real(E)); 
+title('expected error distance of the global vector');
+xlabel('step width l [m]');
+ylabel('distance from nest L [m]');
+zlabel('expected error E [m]');
+

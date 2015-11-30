@@ -5,7 +5,7 @@
 speed = 1;
 N = 500;
 origin = zeros(2,N);
-sigma0 = pi/16;
+sigma0 = pi/12;
 
 % distribution for one step
 dt = 1;
@@ -53,8 +53,8 @@ end
 % against the error between the distributions with one and more steps
 subplot(1,2,1);
 plot(c, error);
-title('error between distributions with different root constants');
-xlabel('root constant');
+title('error between distributions with different constants c');
+xlabel('c');
 ylabel('error');
 
 % root constant c for which the error is minimal
@@ -80,6 +80,6 @@ plot(position2(1,:),position2(2,:),'bo');
 hold off;
 title('position of ant after different number and size of steps');
 legend('1 step with length 1','more steps with smaller width');
-xlabel('position in x');
-ylabel('position in y');
-axis([-1,1,-1,1]);
+xlabel('position in x [m]');
+ylabel('position in y [m]');
+axis([-1,1,0,1.2]);

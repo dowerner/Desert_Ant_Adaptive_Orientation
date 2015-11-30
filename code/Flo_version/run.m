@@ -36,7 +36,7 @@ function run(dt,printFlag)
     ground.landmarks = landmarks;
     
     % place ants
-    nAnts = 6;
+    nAnts = 20;
     ants = Ant(zeros(nAnts,1));
     for i = 1 : length(ants)
         ants(i) = Ant;
