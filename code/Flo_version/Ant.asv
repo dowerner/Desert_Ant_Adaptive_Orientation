@@ -118,7 +118,7 @@ classdef Ant
             % ant walks directly home along a specific direction
             elseif this.walkDirectlyHome == 1
                 this = this.updateLocation(dt);  
-                this.stepsToGo = this.stepsToGo - 1;
+                this.stepsToFollow = this.stepsToFollow - 1;
             end
             
             this.timer = this.timer + dt;
@@ -174,7 +174,7 @@ classdef Ant
                 if norm(ground.nestLocation-this.location) < this.viewRange
                     this = this.stepStraightTo(ground.nestLocation,dt);
                 else
-                    this = this.stepStraightTo(this.location-this.globalVector,dt);
+                    this = this.stepStraightTo(this.globalVector-this.location,dt);
                 end
             end
         end

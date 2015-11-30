@@ -18,7 +18,7 @@ function run(dt,printFlag)
     ground.nestLocation = nestLocation;
     
     % place ants
-    nAnts = 10;
+    nAnts = 20;
     ants = Ant(zeros(nAnts,1));
     for i = 1 : length(ants)
         ants(i) = Ant;
@@ -44,9 +44,10 @@ function run(dt,printFlag)
     stepWidth = ants(1).velocityVector(3)*dt;
     landmarks = Landmark(zeros(1,nLandmarks));
     for k = 1:nLandmarks
-        landmarks(k) = landmarks(k).setUp(xCoord(k),yCoord(k),stepWidth);
+        distance = sqrt( xCoord(k)^2+yCoord(k)^2;
+        landmarks(k) = landmarks(k).setUp(xCoord(k),yCoord(k));
+        ground.landmarks = landmarks;
     end
-    ground.landmarks = landmarks;
 
     hFigure = figure;  %# Create a figure window
     hfAxes = axes;      %# Create an axes in that figure

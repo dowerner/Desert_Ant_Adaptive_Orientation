@@ -14,12 +14,6 @@ classdef Ground
             this.foodSourceLocations = [this.foodSourceLocations [x; y]];
         end
         
-        % adds a landmark at location (x,y)
-        function this = spawnLandmark(this, x, y)
-            landmark = Landmark(x,y);
-            this.landmarks = [this.landmarks landmark];
-        end
-        
         % Removes food source if collected by ant
         function this = collectFoodSource(this, foodSourceLocation)
            [~, count] = size(this.foodSourceLocations);
