@@ -156,25 +156,68 @@ As mentioned the desert ant's main means of orientation are:
 \item pathintegration
 \item local landmark orientation
 \end{itemize}
+The cataglyphis doesn't communicate with its conspecifics on a foraging walk.
+This is because the pray usally consists of small parts of insects, that can be carried by on ant, and no need for sharing information arises. [Appendix \ref{Sec:Correspondence}]
+
+
 
 
 \subsubsection{Pathintegration}
 No matter the zig-zag way out of its nest, the ant is able to return in a more or less straight line. This remarkable ability is reached by pathintegration. The ant iteratively computes the mean of all its turning angles executed and is therefore always aware in which direction its nest is located. These calculations are executed with imperfections which accumulate with growing distance. In extreme cases pathintegration causes the ant to miss its nest and other means of orientation are necessary. \\
+In Wehner1988\cite{Wehner1988}\footnote{on page 5288} the following formulas have been derived, they take into account the rough approximation of the ants pathintegration. 
+\begin{align*}
+\varphi_(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\dot \delta}{l(n)}\\
+l(n+1) =& l(n) +1 -\frac{|\delta|}{\pi}
+\end{align*}
+where $k$ is a normalization constant, $\delta$ is the angle with which the ant is turning its current direction and the step width is assumed to be 1.
+In the following we will discuss the quality of this specific path integrator model.
+Let’s assume that the ant is currently at a position $l = L$ and $\varphi = 0$ (we can assume $\varphi = 0$ without loss of generality because if $\varphi ~= 0$ we would simply rotate our coordinate system to obtain $\varphi’ = 0$ again). Furthermore, the global vector at this point is assumed to be perfect, which means that it directly points from the nest to the ant’s position. 
+Now the ant does one step with a specific step width $l$. The direction is given by the turning angle delta which is assumed to be normal distributed with $\mu = 0$ and $\sigma = \frac{\pi}{16}$.  
+The plot of the expected error of the global vector in this one step can be seen in the figure below.
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.7]{./Pics/pathintegrator_error_plot.png} 
+\caption[Pathintegrator Error]{Pathintegrator Error}
+\end{figure} \\
 
-\subsubsection{Local landmark orientation }
-The ants can make use of landmark orientations. They can recreate a certain route by memorizing given landmarks in the correct sequence.
+It can easily be observed that the distance from the nest L has almost no influence on the error expect for very small distances (0m – 2m). The performance of the global vector model is rather influenced by the choice of the step width $l$. According to the figure, the step width should be chosen sufficiently small.\\
+\ \\
+By varying the step width we end up with a new problem. The path the ant walks along is strongly influenced by the choice of the step width. But what we would like to have is that the ant walks in a similar way no matter what the step size is. 
+To address this problem we set the variance in the distribution of the turning angle theta in relation to $dt$ (step width $l$ of the ant is determined by $l = dt\cdot antSpeed$). 
+We made the following ansatz:\\
+$\sigma(dt) = dt^{c}  \sigma_{0}$ with $c \in (0,1]$ and $\sigma_{0}$ the standard deviation for $dt = 1$.
+Then we let the ant do $n1=1$ steps with $dt=1$ and $n2=\frac{1}{dt}$ steps with some $dt \in (0,1]$. Finally we correlated the resulting positions of the two situations and looked for the best correlation, i.e. $c$ such that the difference between the two situations is lowest. 
+The result for a normal distribution with $\mu =0$ and $\sigma_{0} = \frac{\pi}{12}$ and $dt = 0.1$ can be seen in the figure below.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.36]{./Pics/VarianceForStepWidth_plot.png} 
+\caption[VariacneForStepWidth]{VarianceForStepWidth}
+\end{figure} 
+Afterwards we tried out several different $dt’s$ and $\sigma_{0}’s$ but the result for $c$ was always similar to the one in the left side of the figure. The value for the best fitting $c$ can be read off as being approximately 0.3.
+
+
+\subsection{Local landmark Orientation}
+....
+\newpage
+
 \subsubsection{Combination} \label{Sec:Combination}
 %It is not that the various means of orientations are combined in a weighted fashion. Given certain criteria the different means are used separately.\\
-%The results gained R. Wehner's experiments indicate that ants use predominantly pathintegration, but if available using local landmarks is more preferable to using the global vector-navigation via pathintegration. 
-
-%It has been concluded that the ant transiently inhibits the global vector when being in familiar territory. The global vector only reemerges after the local vector ceases. Whilst navigating via the local vector the global vector is continuously updated.
+The results gained R. Wehner's experiments indicate that ants use predominantly pathintegration, but if available using local landmarks is more preferable to using the global vector-navigation via pathintegration. It has been concluded that the ant transiently inhibits the global vector when being in familiar territory. The global vector only reemerges after the local vector ceases. Whilst navigating via the local vector the global vector is continuously updated.
+\\ \
 
 \begin{algorithm}[H]
+
   \SetKwFunction{algo}{ReturnToMyNest}
   \SetKwProg{myalg}{Algorithm}{}{}
   \myalg{\algo{}}{
+
+
+
+
+%\SetKwFunction{goToMyNest}{goToMyNest}
+%\goToMyNest
  \While{not at nest}{ 
- secrete pheromones; \\
  execute global vector;\\
  update global vector;
  
@@ -340,44 +383,7 @@ stop moving thus being dead.
 %\lstinputlisting[captionpos=b,caption=Beispiel,label="Label_Beispiel"]{./Code/Beispiel.m}
 
 \section{Simulation Results and Discussion}
-\subsection{Discussion of the Path Integrator}
-According to Rüdiger Wehner, Cataglyphis Fortis doesn’t use any kind of pheromones for orientation because they would evaporate too quickly in the desert. Therefore, the performance of the ant’s path integrator is crucial for the survival of Cataglyphis Fortis in the desert.\\
-\ \\
-The model we used in our project was based on \cite{Wehner1988} \footnote{on page 5288}. The formulas for updating the global vector, i.e. angle $\varphi$ and distance $l$ from the ant’s location to the nest, are the following for any time instant $n$:
 
-\begin{align*}
-\varphi(n+1) =& \varphi(n) + k \cdot\frac{(\pi + \delta)\cdot(\pi - \delta)}{l(n)}  \\
-l(n+1) =& l(n) +1 - \frac{|\delta|}{\pi}
-\end{align*}
-
-where $k$ is a normalization constant, $\delta$ is the angle with which the ant is turning its current direction and the step width is assumed to be 1.\\
-\ \\
-In the following we will discuss the quality of this specific path integrator model.\\
-Let’s assume that the ant is currently at a position $l = L$ and $\varphi = 0$ (we can assume $\varphi =0$ without loss of generality because if $\varphi \approx 0$ we would simply rotate our coordinate system to obtain $\varphi’ = 0$ again). Furthermore, the global vector at this point is assumed to be perfect, which means that it directly points from the nest to the ant’s position. \\
-Now the ant does one step with a specific step width $l$. The direction is given by the turning angle $\delta$ which is assumed to be normal distributed with $\mu =0$ and $\sigma = \frac{\pi}{16}$.  \\
-The plot of the expected error of the global vector in this one step can be seen in the figure below.
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=1]{./Pics/pathintegrator_error_plot.png}
-\caption{Expected error of global vector}
-\label{ExpErr}
-\end{figure}
-It can easily be observed that the distance from the nest L has almost no influence on the error expect for very small distances (0m – 2m). The performance of the global vector model is rather influenced by the choice of the step width $l$. According to the figure, the step width should be chosen sufficiently small.\\
-\ \\
-By varying the step width we end up with a new problem. The path the ant walks along is strongly influenced by the choice of the step width. But what we would like to have is that the ant walks in a similar way no matter what the step size is. 
-To address this problem we set the variance in the distribution of the turning angle theta in relation to $dt$ (step width $l$ of the ant is determined by $l = dt\cdot antSpeed$). 
-We made the following ansatz:\\
-$\sigma(dt) = dt^{c}  \sigma_{0}$ with $c \in (0,1]$ and $\sigma_{0}$ the standard deviation for $dt = 1$.
-Then we let the ant do $n1=1$ steps with $dt=1$ and $n2=\frac{1}{dt}$ steps with some $dt \in (0,1]$. Finally we correlated the resulting positions of the two situations and looked for the best correlation, i.e. $c$ such that the difference between the two situations is lowest. 
-The result for a normal distribution with $\mu =0$ and $\sigma_{0} = \frac{\pi}{12}$ and $dt = 0.1$ can be seen in the figure below.
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.3]{./Pics/VarianceForStepWidth_plot.png}
-\caption{Expected error of global vector}
-\label{ExpErr}
-\end{figure}
-Afterwards, we tried out several different $dts$ and $\sigma_{0}' s$ but the result for $c$ was always similar to the one in the left side of the figure. The value for the best fitting c can be read off as being approximately 0.3.  
 \section{Summary and Outlook}
 \newpage
 \appendix
@@ -389,7 +395,7 @@ Afterwards, we tried out several different $dts$ and $\sigma_{0}' s$ but the res
 
 
 
-\subsection{Pathinterator.m} \label{run}
+\subsection{run.m} \label{run}
 \lstinputlisting[captionpos=b,caption=run.m,label="list:run.m"]{./Code/run.m}
 
 \subsection{distanceBetweenTwoPoints.m}\label{distancebetweenTwoPoints}
@@ -405,14 +411,13 @@ Afterwards, we tried out several different $dts$ and $\sigma_{0}' s$ but the res
 \subsection{Ant.m}\label{Ant}
 \lstinputlisting[captionpos=b,caption=Ant.m,label="List:Ant.m"]{./Code/Ant.m}
 
-\subsection{run.m} \label{run}
-\lstinputlisting[captionpos=b,caption=run.m,label="list:run.m"]{./Code/run.m}
+
 
 
 \newpage
 
 
-\section{Correspondence}
+\section{Correspondence} \label{Sec:Correspondence}
 R. Whener ,author of \cite{Wehner2003},\cite{Wehner1988}, \cite{Wehner1998} kindly answered us a few questions.\\
 
 
