@@ -18,7 +18,7 @@ function run(dt,printFlag)
     ground.nestLocation = nestLocation;
     
     % place ants
-    nAnts = 10;
+    nAnts = 1;
     ants = Ant(zeros(nAnts,1));
     for i = 1 : length(ants)
         ants(i) = Ant;

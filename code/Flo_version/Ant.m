@@ -186,7 +186,11 @@ classdef Ant
                 this = this.stepStraightTo(center,dt);
             else
                 this = this.takeRandomStep(dt);
-            end           
+            end       
+            %if norm(this.nearestLandmark.location-this.location)< this.viewRange
+            if ~isnan(this.nearestLandmark.status)
+                this.lookingFor = 'landmark';
+            end
         end
         
         % This method update the location of the ant using velocity vector
