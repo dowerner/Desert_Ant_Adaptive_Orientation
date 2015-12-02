@@ -23,17 +23,12 @@ classdef Ant
         lostPosition % when the ant want to get home, but wont find it, this is the place where global vector=0
         searchRadius % radius around lost distance in which the ant will be searching
         
-        timer % time ellapsed since the ant has left the nest
-        timerWError % timer with some white noise
+        timer % counts the time that has ellapsed since the ant had left the nest
+        timerWError % time the ant thinks has ellapsed since it left the nest
         livingTime % time after which the ant dies of overheating
         nearestFoodSourceLocation % nearest food source to ant
     end
     
-    %-- NOTE: the non static methods requires always an argument.
-    %-- This is because matlab passes secretely the istance on which
-    %-- the method is called as an argument.
-    %-- Thus the method looks like this: function my_method(this)
-    %-- and the call to the method is: obj.my_method()
     methods
         
         % Needed to preallocate an array of ants.
@@ -46,8 +41,7 @@ classdef Ant
         end          
         
         
-        %the only function that should be called
-   
+        % ant performs a step   
         function [this, ground] = performStep(this,ground,dt)
             eps = 1e-4;
             
@@ -55,17 +49,20 @@ classdef Ant
             if(this.timer >= this.livingTime)
                 return;
             end
-
-            % ant returns so that with the time for the way home the time
-            % outside the nest doesnt exceed the maximal living time.     
-            effectReturnTime = this.l/this.velocityVector(3);
             
-            %timerWError + effectReturnTime timeSecurity > livingTime ---> Return to nest
-            timeSecurity = 20;
-            if (this.timerWError + effectReturnTime + timeSecurity - this.livingTime) > 0  
+            % update the lookingFor property of ant
+ 
+            % ant returns to nest if remaining time to get back gets short
+            % ant plans with a return distance that is securityFactor times
+            % the distance it would need to return directly
+            effectReturnTime = this.l/this.velocityVector(3);
+            securityFactor = 2;
+            
+            if (this.timerWError + securityFactor*effectReturnTime - this.livingTime) > 0  
                this.lookingFor = 'nest';
             end
             
+            % ants goes back if it's too far away
             if (abs(this.l) > this.maxDistance)
                 this.lookingFor = 'nest';
             end
@@ -81,7 +78,7 @@ classdef Ant
             %  ant puts down food and set food source as target if its
             %  location is at nest
             if strcmp(this.lookingFor, 'nest') && norm(this.location - ground.nestLocation) < eps
-                this = this.setUp(ground,dt);
+                this = this.setUp(ground);
             end
             
             % ant looks for nearest landmark if in sight and if nest is not
@@ -103,8 +100,11 @@ classdef Ant
                 this.velocityVector(1:2) = this.nearestLandmark.direction;
             end              
                 
-            % ant moves to food source or to nest or to landmark
-            if strcmp(this.lookingFor, 'food')
+            % ant moves
+            if this.walkDirectlyHome == 1
+                this = this.updateLocation(dt);
+                this.stepsToGo = this.stepsToGo - 1;
+            elseif strcmp(this.lookingFor, 'food')
                 if norm(this.nearestFoodSourceLocation-this.location) < this.viewRange
                     this = this.stepStraightTo(this.nearestFoodSourceLocation,dt);
                 else
@@ -114,25 +114,18 @@ classdef Ant
                 this = this.returnHomeUsingPathIntegrator(ground, dt);
             elseif strcmp(this.lookingFor, 'landmark')
                 this = this.stepStraightTo(this.nearestLandmark.location,dt);
-            
-            % ant walks directly home along a specific direction
-            elseif this.walkDirectlyHome == 1
-                this = this.updateLocation(dt);  
-                this.stepsToGo = this.stepsToGo - 1;
             end
             
+            % update rules for ant
             this.timer = this.timer + dt;
-            % Adding gaussian distributed error to the timer
-            this.timerWError = this.timerWError + dt*(1 + 0.1*randn(1,1));
-            this = this.updateGlobalVector(ground);   
+            this.timerWError = this.timerWError + dt*(1 + 0.3*randn(1,1));
+            this = this.updateGlobalVector(ground);
+            this = this.updateNearestFoodSource(ground);
             
             % stop following path when stepsToFollow == 0
             if this.stepsToGo == 0
                 this.walkDirectlyHome = 0;
             end
-            
-            % set nearest food source
-            this = this.updateNearestFoodSource(ground);
         end
   
         % This method makes the ant do a step directly straight to some
@@ -187,13 +180,13 @@ classdef Ant
             else
                 this = this.takeRandomStep(dt);
             end       
-            %if norm(this.nearestLandmark.location-this.location)< this.viewRange
+            % if ant can see a landmark it goes there
             if ~isnan(this.nearestLandmark.status)
                 this.lookingFor = 'landmark';
             end
         end
         
-        % This method update the location of the ant using velocity vector
+        % This method updates the location of the ant using velocity vector
         % information
         function this = updateLocation(this,dt)
             v = this.velocityVector(1:2);
@@ -223,7 +216,7 @@ classdef Ant
                     v = this.location - this.prevLocation;
                     delta = vector2angle(v)-this.phi;
                     
-                    if abs(delta) > pi+eps % stumpfer winkel wird zu spitzem winkel konvertiert falls stumpf
+                    if abs(delta) > pi+eps % if angle is obtuse convert it to acute angle 
                         if (delta > pi)
                             delta = -(2*pi-delta);
                         else
@@ -259,11 +252,11 @@ classdef Ant
         end
         
         % Build an ant
-        function this = setUp(this,ground,dt)
+        function this = setUp(this,ground)
             v = ([rand;rand]).*2-1;
             v = v./norm(v);
             v = [v;1];
-            this.maxDistance = 80;
+            this.maxDistance = 100;
             this.isLeavingNest = 1;
             this.startangle = vector2angle(v);
             thi.phi = vector2angle(v);
@@ -284,7 +277,7 @@ classdef Ant
             this.lostPosition = nan;
             this.timer = 0;
             this.timerWError = 0;
-            this.livingTime = 100;
+            this.livingTime = 150;
             this = this.updateNearestFoodSource(ground);
         end
     end

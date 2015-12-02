@@ -18,11 +18,11 @@ function run(dt,printFlag)
     ground.nestLocation = nestLocation;
     
     % place ants
-    nAnts = 1;
+    nAnts = 10;
     ants = Ant(zeros(nAnts,1));
     for i = 1 : length(ants)
         ants(i) = Ant;
-        ants(i) = ants(i).setUp(ground,dt);
+        ants(i) = ants(i).setUp(ground);
     end
     ground.ants = ants;
 
