@@ -3,7 +3,7 @@ classdef Landmark
         location; % location of the landmark
         direction; % direction ant has to go when reaching landmark
         stepsToFollow; % number of steps ant walks in a specific direction when reaching landmark
-        status; % bool: is true if landmark is in viewRangeLandmarks of ant
+        status; % bool: is true if landmark is in v
     end
     
     methods
@@ -18,7 +18,7 @@ classdef Landmark
                 this.location = nan;
                 this.direction = nan;
                 this.stepsToFollow = nan;
-                this.status = 0;
+                this.status = nan;
             end
         end
         

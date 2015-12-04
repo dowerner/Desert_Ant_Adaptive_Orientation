@@ -83,8 +83,8 @@ classdef Ant
             
             % ant looks for nearest landmark if in sight and if nest is not
             % nearer
-            this.nearestLandmark = ground.getNearestLandmark(this);
-            if ~isnan(this.nearestLandmark.status)
+            this = this.getNearestLandmark(ground);
+            if this.nearestLandmark.status 
                 if strcmp(this.lookingFor,'nest') && ... 
                         distanceBetweenTwoPoints(this.nearestLandmark.location,this.location) < this.l && ...
                         ~this.walkDirectlyHome
@@ -111,7 +111,7 @@ classdef Ant
                     this = this.takeRandomStep(dt);
                 end
             elseif strcmp(this.lookingFor, 'nest') && ~this.walkDirectlyHome
-                this = this.returnHomeUsingPathIntegrator(ground, dt);
+                this = this.returnHomeUsingPathIntegrator(ground,dt);
             elseif strcmp(this.lookingFor, 'landmark')
                 this = this.stepStraightTo(this.nearestLandmark.location,dt);
             end
@@ -181,7 +181,7 @@ classdef Ant
                 this = this.takeRandomStep(dt);
             end       
             % if ant can see a landmark it goes there
-            if ~isnan(this.nearestLandmark.status)
+            if this.nearestLandmark.status
                 this.lookingFor = 'landmark';
             end
         end
@@ -248,6 +248,40 @@ classdef Ant
                         this.nearestFoodSourceLocation = ground.foodSourceLocations(:,i);
                     end
                 end
+            end
+        end
+        
+         % gets all the landmarks in sight of the ant
+        function inRangeLandmarks = getLandmarksInRange(this,ground)
+            inRangeLandmarks = Landmark(zeros(size(ground.landmarks)));
+            j = 1;
+            for i = 1 : length(ground.landmarks)
+                landmark = ground.landmarks(i);
+                if norm(landmark.location - this.location) <= this.viewRangeLandmarks
+                    inRangeLandmarks(j) = landmark;
+                    j = j+1;
+                end
+            end
+            inRangeLandmarks = inRangeLandmarks(1:j-1);
+        end
+        
+        % gets the nearest landmark from all the landmarks in sight of the
+        % ant
+        function this = getNearestLandmark(this,ground)
+            inRangeLandmarks = getLandmarksInRange(this,ground);
+            if ~isempty(inRangeLandmarks)
+                this.nearestLandmark = inRangeLandmarks(1);
+                minDistance = distanceBetweenTwoPoints(this.nearestLandmark.location,this.location);
+                for i = 2 : length(inRangeLandmarks)
+                    landmark = inRangeLandmarks(i);
+                    distance = distanceBetweenTwoPoints(landmark.location,this.location);
+                    if distance <= minDistance
+                       this.nearestLandmark = landmark;
+                       minDistance = distance;
+                    end
+                end
+            else
+                this.nearestLandmark.status = 0;
             end
         end
         

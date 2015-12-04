@@ -78,13 +78,13 @@ classdef Ant
             %  ant puts down food and set food source as target if its
             %  location is at nest
             if strcmp(this.lookingFor, 'nest') && norm(this.location - ground.nestLocation) < eps
-                this = this.setUp(ground,dt);
+                this = this.setUp(ground);
             end
             
             % ant looks for nearest landmark if in sight and if nest is not
             % nearer
-            this.nearestLandmark = ground.getNearestLandmark(this);
-            if ~isnan(this.nearestLandmark.status)
+            this = this.getNearestLandmark(ground);
+            if this.nearestLandmark.status
                 if strcmp(this.lookingFor,'nest') && ... 
                         distanceBetweenTwoPoints(this.nearestLandmark.location,this.location) < this.l && ...
                         ~this.walkDirectlyHome
@@ -103,7 +103,7 @@ classdef Ant
             % ant moves
             if this.walkDirectlyHome == 1
                 this = this.updateLocation(dt);
-                this.stepsToG0 = this.stepsToGo - 1;
+                this.stepsToGo = this.stepsToGo - 1;
             elseif strcmp(this.lookingFor, 'food')
                 if norm(this.nearestFoodSourceLocation-this.location) < this.viewRange
                     this = this.stepStraightTo(this.nearestFoodSourceLocation,dt);
@@ -111,14 +111,14 @@ classdef Ant
                     this = this.takeRandomStep(dt);
                 end
             elseif strcmp(this.lookingFor, 'nest') && ~this.walkDirectlyHome
-                this = this.returnHomeUsingPathIntegrator(ground, dt);
+                this = this.returnHomeUsingPathIntegrator(ground,dt);
             elseif strcmp(this.lookingFor, 'landmark')
                 this = this.stepStraightTo(this.nearestLandmark.location,dt);
             end
             
             % update rules for ant
             this.timer = this.timer + dt;
-            this.timerWError = this.timerWError + dt*(1 + 0.1*randn(1,1));
+            this.timerWError = this.timerWError + dt*(1 + 0.3*randn(1,1));
             this = this.updateGlobalVector(ground);
             this = this.updateNearestFoodSource(ground);
             
@@ -181,7 +181,7 @@ classdef Ant
                 this = this.takeRandomStep(dt);
             end       
             % if ant can see a landmark it goes there
-            if ~isnan(this.nearestLandmark.status)
+            if this.nearestLandmark.status
                 this.lookingFor = 'landmark';
             end
         end
@@ -251,12 +251,46 @@ classdef Ant
             end
         end
         
+         % gets all the landmarks in sight of the ant
+        function inRangeLandmarks = getLandmarksInRange(this,ground)
+            inRangeLandmarks = Landmark(zeros(size(ground.landmarks)));
+            j = 1;
+            for i = 1 : length(ground.landmarks)
+                landmark = ground.landmarks(i);
+                if norm(landmark.location - this.location) <= this.viewRangeLandmarks
+                    inRangeLandmarks(j) = landmark;
+                    j = j+1;
+                end
+            end
+            inRangeLandmarks = inRangeLandmarks(1:j-1);
+        end
+        
+        % gets the nearest landmark from all the landmarks in sight of the
+        % ant
+        function this = getNearestLandmark(this,ground)
+            inRangeLandmarks = getLandmarksInRange(this,ground);
+            if ~isempty(inRangeLandmarks)
+                this.nearestLandmark = inRangeLandmarks(1);
+                minDistance = distanceBetweenTwoPoints(this.nearestLandmark.location,this.location);
+                for i = 2 : length(inRangeLandmarks)
+                    landmark = inRangeLandmarks(i);
+                    distance = distanceBetweenTwoPoints(landmark.location,this.location);
+                    if distance <= minDistance
+                       this.nearestLandmark = landmark;
+                       minDistance = distance;
+                    end
+                end
+            else
+                this.nearestLandmark.status = 0;
+            end
+        end
+        
         % Build an ant
-        function this = setUp(this,ground,dt)
+        function this = setUp(this,ground)
             v = ([rand;rand]).*2-1;
             v = v./norm(v);
             v = [v;1];
-            this.maxDistance = 80;
+            this.maxDistance = 100;
             this.isLeavingNest = 1;
             this.startangle = vector2angle(v);
             thi.phi = vector2angle(v);
@@ -277,7 +311,7 @@ classdef Ant
             this.lostPosition = nan;
             this.timer = 0;
             this.timerWError = 0;
-            this.livingTime = 100;
+            this.livingTime = 150;
             this = this.updateNearestFoodSource(ground);
         end
     end

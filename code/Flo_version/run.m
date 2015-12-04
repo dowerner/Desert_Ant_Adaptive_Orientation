@@ -38,7 +38,7 @@ function run(dt,printFlag)
     
     % place landmarks
     nLandmarks = 5;
-    landmarkDistance = 10;
+    landmarkDistance = 5;
     xCoord = landmarkDistance*(2*rand(1,nFoodSources)-1);
     yCoord = landmarkDistance*(2*rand(1,nFoodSources)-1);
     stepWidth = ants(1).velocityVector(3)*dt;
