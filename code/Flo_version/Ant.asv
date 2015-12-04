@@ -83,7 +83,7 @@ classdef Ant
             
             % ant looks for nearest landmark if in sight and if nest is not
             % nearer
-            this = this.getNearestLandmark(ground);
+            this.nearestLandmark = this.getNearestLandmark(ground);
             if this.nearestLandmark.status
                 if strcmp(this.lookingFor,'nest') && ... 
                         distanceBetweenTwoPoints(this.nearestLandmark.location,this.location) < this.l && ...
@@ -231,27 +231,7 @@ classdef Ant
             end
         end
         
-        % set nearest food source
-        function this = updateNearestFoodSource(this, ground)
-            [~, length] = size(ground.foodSourceLocations);
-            if length == 0
-               this.nearestFoodSourceLocation = [100;100]; % set the location somewhere far away
-               return; 
-            end
-            this.nearestFoodSourceLocation = ground.foodSourceLocations(:,1);
-            distance = norm(this.location-ground.foodSourceLocations(1));
-            if length > 1
-                for i = 2 : length
-                    newDistance = norm(this.location-ground.foodSourceLocations(:,i));
-                    if newDistance < distance
-                        distance = newDistance;
-                        this.nearestFoodSourceLocation = ground.foodSourceLocations(:,i);
-                    end
-                end
-            end
-        end
-        
-         % gets all the landmarks in sight of the ant
+        % gets all the landmarks in sight of the ant
         function inRangeLandmarks = getLandmarksInRange(this,ground)
             inRangeLandmarks = Landmark(zeros(size(ground.landmarks)));
             j = 1;
@@ -282,6 +262,26 @@ classdef Ant
                 end
             else
                 this.nearestLandmark.status = 0;
+            end
+        end
+        
+        % set nearest food source
+        function this = updateNearestFoodSource(this, ground)
+            [~, length] = size(ground.foodSourceLocations);
+            if length == 0
+               this.nearestFoodSourceLocation = [100;100]; % set the location somewhere far away
+               return; 
+            end
+            this.nearestFoodSourceLocation = ground.foodSourceLocations(:,1);
+            distance = norm(this.location-ground.foodSourceLocations(1));
+            if length > 1
+                for i = 2 : length
+                    newDistance = norm(this.location-ground.foodSourceLocations(:,i));
+                    if newDistance < distance
+                        distance = newDistance;
+                        this.nearestFoodSourceLocation = ground.foodSourceLocations(:,i);
+                    end
+                end
             end
         end
         
