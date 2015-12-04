@@ -83,7 +83,7 @@ classdef Ant
             
             % ant looks for nearest landmark if in sight and if nest is not
             % nearer
-            this.nearestLandmark = ground.getNearestLandmark(this);
+            this.nearestLandmark = this.getNearestLandmark(ground);
             if ~isnan(this.nearestLandmark.status)
                 if strcmp(this.lookingFor,'nest') && ... 
                         distanceBetweenTwoPoints(this.nearestLandmark.location,this.location) < this.l && ...
@@ -228,6 +228,40 @@ classdef Ant
                     this.l = this.l + norm(v) - 2*abs(delta)/pi*norm(v);
                     this.globalVector = [cos(this.phi) ; sin(this.phi)]*this.l;
                 end
+            end
+        end
+        
+        % gets all the landmarks in sight of the ant
+        function inRangeLandmarks = getLandmarksInRange(this,ground)
+            inRangeLandmarks = Landmark(zeros(size(ground.landmarks)));
+            j = 1;
+            for i = 1 : length(ground.landmarks)
+                landmark = ground.landmarks(i);
+                if norm(landmark.location - this.location) <= this.viewRangeLandmarks
+                    inRangeLandmarks(j) = landmark;
+                    j = j+1;
+                end
+            end
+            inRangeLandmarks = inRangeLandmarks(1:j-1);
+        end
+        
+        % gets the nearest landmark from all the landmarks in sight of the
+        % ant
+        function nearestLandmark = getNearestLandmark(this,ground)
+            inRangeLandmarks = getLandmarksInRange(this,ground);
+            if ~isempty(inRangeLandmarks)
+                nearestLandmark = inRangeLandmarks(1);
+                minDistance = distanceBetweenTwoPoints(nearestLandmark.location,this.location);
+                for i = 2 : length(inRangeLandmarks)
+                    landmark = inRangeLandmarks(i);
+                    distance = distanceBetweenTwoPoints(landmark.location,this.location);
+                    if distance <= minDistance
+                       nearestLandmark = landmark;
+                       minDistance = distance;
+                    end
+                end
+            else
+                nearestLandmark.status = nan;
             end
         end
         

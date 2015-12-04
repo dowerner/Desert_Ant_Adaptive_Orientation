@@ -31,40 +31,6 @@ classdef Ground
            end
            this.foodSourceLocations(:,index) = [];
         end
-           
-        % gets all the landmarks in sight of the ant
-        function inRangeLandmarks = getLandmarksInRange(this,ant)
-            inRangeLandmarks = Landmark(zeros(size(this.landmarks)));
-            j = 1;
-            for i = 1 : length(this.landmarks)
-                landmark = this.landmarks(i);
-                if norm(landmark.location - ant.location) <= ant.viewRangeLandmarks
-                    inRangeLandmarks(j) = landmark;
-                    j = j+1;
-                end
-            end
-            inRangeLandmarks = inRangeLandmarks(1:j-1);
-        end
-        
-        % gets the nearest landmark from all the landmarks in sight of the
-        % ant
-        function nearestLandmark = getNearestLandmark(this,ant)
-            inRangeLandmarks = getLandmarksInRange(this,ant);
-            if ~isempty(inRangeLandmarks)
-                nearestLandmark = inRangeLandmarks(1);
-                minDistance = distanceBetweenTwoPoints(nearestLandmark.location,ant.location);
-                for i = 2 : length(inRangeLandmarks)
-                    landmark = inRangeLandmarks(i);
-                    distance = distanceBetweenTwoPoints(landmark.location,ant.location);
-                    if distance <= minDistance
-                       nearestLandmark = landmark;
-                       minDistance = distance;
-                    end
-                end
-            else
-                nearestLandmark.status = nan;
-            end
-        end
         
         function bool = isLocationAtNest(this,loc)
             if norm(this.nestLocation-loc) == 0
