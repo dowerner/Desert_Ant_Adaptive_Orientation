@@ -1,6 +1,6 @@
 function run(dt,printFlag)
     if nargin == 0
-        dt = 0.2;
+        dt = 0.3;
         printFlag = false;
     end
 
@@ -38,7 +38,7 @@ function run(dt,printFlag)
     
     % place landmarks
     nLandmarks = 5;
-    landmarkDistance = 5;
+    landmarkDistance = 15;
     xCoord = landmarkDistance*(2*rand(1,nFoodSources)-1);
     yCoord = landmarkDistance*(2*rand(1,nFoodSources)-1);
     stepWidth = ants(1).velocityVector(3)*dt;
@@ -84,7 +84,7 @@ function run(dt,printFlag)
         title('foraging ants');
         xlabel('length [m]');
         ylabel('length [m]');
-        ground = updateGround(ground,length(ants),dt,printFlag);
+        ground = updateGround(ground,length(ants),printFlag);
         drawnow;
         
         % a pause so that according to the timeLapseFactor a step in

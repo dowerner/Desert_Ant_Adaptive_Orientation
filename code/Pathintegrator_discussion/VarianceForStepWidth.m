@@ -83,3 +83,5 @@ legend('1 step with length 1','more steps with smaller width');
 xlabel('position in x [m]');
 ylabel('position in y [m]');
 axis([-1,1,0,1.2]);
+
+set(gcf,'numbertitle','off','name','VarianceForStepWidth_plot')

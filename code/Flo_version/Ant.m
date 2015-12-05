@@ -14,6 +14,7 @@ classdef Ant
             % realistic way. phi represent an angle.
         l   % The second part needed for what is described above.
             % l represent the total length walked till now.
+        meanDirection % mean for the turning angle 
         lookingFor % String witch says what the ant is looking for.
         
         startangle % angle with ant leaves the nest

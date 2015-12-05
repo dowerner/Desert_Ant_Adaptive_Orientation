@@ -1,4 +1,4 @@
-function ground = updateGround(ground,currentStep,dt,printFlag)
+function ground = updateGround(ground,currentStep,printFlag)
     try % for some reason the ant array can have less entries that get counted
         % Update the ants pixels
         for i = 1 : length(ground.ants)
@@ -8,16 +8,6 @@ function ground = updateGround(ground,currentStep,dt,printFlag)
                  'FontSize',8,...
                  'HorizontalAlignment','center');
             plot(ground.ants(i).prevLocation(1),ground.ants(i).prevLocation(2),'ko');
-
-            %-- Used For Debug --%
-            %--------------------%
-
-        %     % Plot the walk direction
-        %     plot([ground.ants(i).prevLocation(1) ground.ants(i).prevLocation(1)+ground.ants(i).pathDirection(1)], ...
-        %          [ground.ants(i).prevLocation(2) ground.ants(i).prevLocation(2)+ground.ants(i).pathDirection(2)],...
-        %          'r');
-        %     % Plot the next position
-        %     plot(ground.ants(i).location(1),ground.ants(i).location(2),'r*');
         end
     catch
         warning('Ant index exceeded.');
