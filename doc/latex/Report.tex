@@ -157,12 +157,12 @@ As mentioned the desert ant's main means of orientation are:
 \item local landmark orientation
 \end{itemize}
 The cataglyphis doesn't communicate with its conspecifics on a foraging walk.
-This is because the pray usally consists of small parts of insects, that can be carried by on ant, and no need for sharing information arises. [Appendix \ref{Sec:Correspondence}]
+This is because the prey usally consists of small parts of insects, that can be carried by one ant, and no need for sharing information arises. [Appendix \ref{Sec:Correspondence}]
 
 
 
 
-\subsubsection{Pathintegration}
+\subsubsection{Pathintegration}\label{Sec:PathIntegration}
 No matter the zig-zag way out of its nest, the ant is able to return in a more or less straight line. This remarkable ability is reached by pathintegration. The ant iteratively computes the mean of all its turning angles executed and is therefore always aware in which direction its nest is located. These calculations are executed with imperfections which accumulate with growing distance. In extreme cases pathintegration causes the ant to miss its nest and other means of orientation are necessary. \\
 In Wehner1988\cite{Wehner1988}\footnote{on page 5288} the following formulas have been derived, they take into account the rough approximation of the ants pathintegration. 
 \begin{align*}
@@ -253,6 +253,25 @@ The results gained R. Wehner's experiments indicate that ants use predominantly 
 
 
 \section{Description of the Model}
+
+For our simulation we will use an agent based model where every agent will be representing an ant. To be able to compare our model with the real world data we have to keep track of several different variables:
+\begin{description}
+\item[nestLocation:] This is a 2D vector which indicates the position of the nest inside a sand pan.
+\item[foodSourceLocation(s): ]These 2D vectors symbolize the location of a food source which the ant will have to travel to. It should be possible to implement an ephemeral (non-renewable) food source so the ant has to look for a new one if the first does not yield food anymore.
+\item [ants: ]The agents themselves who contain their position data and other information to track the simulation.
+\item[landmarks:]Objects that symbolize visual orientation points for the ants.
+\end{description}
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Implementation}
 To implement our agent based model we decided to use object orientated programming because it
@@ -383,8 +402,118 @@ stop moving thus being dead.
 %\lstinputlisting[captionpos=b,caption=Beispiel,label="Label_Beispiel"]{./Code/Beispiel.m}
 
 \section{Simulation Results and Discussion}
+\subsection{Discussion of the Pathintegrator}
+The general idea of the pathintegrator is described in section \ref{Sec:PathIntegration}. In the following we will discuss the quality of this specific path integrator model.
+Let’s assume that the ant is currently at a position $l = L$ and $\varphi = 0$ (we can assume $\varphi = 0$ without loss of generality because if $phi \approx 0$ we would simply rotate our coordinate system to obtain $\varphi’ = 0$ again). Furthermore, the global vector at this point is assumed to be perfect, which means that it directly points from the nest to the ant’s position. \\
+Now the ant does one step with a specific step width $l$. The direction is given by the turning angle delta which is assumed to be normal distributed with expectation value $\mu$ and standard deviation $\sigma = \frac{\pi}{16}$ where $\mu$ corresponds to the direction the ant has been walking in the previous step. Of course, the path integrator critically depends on this $\mu$ as can be seen in figure \ref{fig:Variance} (plots for $\mu=0,40,80,120^{\circ}$). In figure \ref{fig:Variance} , the first row illustrates the absolute expected error of the path integrator while the second row illustrates the expected error relative to the step width l.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.31]{./Pics/VarianceForStepWidth_plot.png} 
+\caption{Variance for stepwidth \label{fig:Variance} }
+\end{figure} 
+
+To improve the performance of the path integrator as well as to make to walk of the ant more detailed one would be able to vary the step width $l$. 
+But by varying $l$ we end up with a new problem. The path the ant walks along is strongly influenced by the choice of $l$. What we would like to have though is that the ant walks in a similar way no matter what the step size is. 
+To address this problem we set the variance in the distribution of the turning angle $\vartheta$ in relation to dt (step width l of the ant is determined by l = dt*antSpeed) . 
+We made the following ansatz: $\sigma(dt) = dt^{c} \cdot \sigma_{0}$ with $c \in (0,1]$ and $\sigma_{0}$ the standard deviation for $dt = 1$.
+Then we let the ant do $n1=1$ steps with $dt=1$ and $n2=\frac{1}{dt}$ steps with some $dt \in (0,1]$.Finally we correlated the resulting positions of the two situations and looked for the best correlation, i.e. $c$ such that the difference between the two situations is lowest. 
+The result for a normal distribution with $\mu = 0$ and sigma0 = pi/12 and dt = 0.1 can be seen in the figure below.
+Afterwards, we tried out several different $dt’s$ and $\sigma_{0}’s$ but the result for c was always similar to the one in the left side of the figure. The value for the best fitting c can be seen in figure \ref{fig:Variance} as being approximately 0.3.  
+
+
+
+
+\subsection{Results of the Pahtintegrator}
+
+
+To verify, if we implemented the pathintegrator correctly, we let the ants do the same experiment as described in Wehner1988 \cite{Wehner1988}.
+The ant starts at the Nest (N) and walks 12 meters from the nest in a fixed direction. After that it turns an angle $\alpha$ and walks another 5 meters in this direction, where it finds Food (F). At this point Wehner and Müller measured the angle the ants would take to find home and calculated the error in comparison to the exact position of the nest.
+Our results produced look exactly the same, what proves, that we implemented the pathintegrator in the way Wehner and Müller think it is correct.\\
+
+
+\begin{figure}[h!]%
+\begin{minipage}[t]{7.9 cm}
+\centering
+\includegraphics[scale=0.4]{./Pics/angularError.png} 
+\caption{Angular Error produced \label{fig:AngErrorProd} }
+\end{minipage}
+%
+\begin{minipage}[t]{7.9 cm}
+\centering
+\includegraphics[scale=0.3]{./Pics/angularErrorOfWehner.png} 
+\caption{Angular Error according to \cite{Wehner1988} \label{fig:AngErrorWehner} }
+\end{minipage}
+\end{figure}
+
+
+In figure \ref{fig:AngErrorProd}, we see the angular error of our Matlab simulations in figure \ref{fig:AngErrorWehner} we see the plot the paper Wehner1988\cite{Wehner1988}. Our implementation of the pathintegrator varies in the following points to the implementation of GordonTeam2008 \cite{GordonTeam2008}
+
+\begin{itemize}
+\item $\delta$ is meant as the angle between the angle of the global vector and the actual direction instead of the actual change in direction
+\item the fitting constant k has to be changed if we use angles from $0 $to $2 \pi$ instead of 0$^\circ$ to $360^\circ$
+\item they miscalculated the end of the second leg in the two-leg experiment.
+
+\end{itemize}
+
+
+
 
 \section{Summary and Outlook}
+\section*{Fundamental Questions}
+At the end of this project we want to have a model which is able to simulate realistic desert ant behavior in a variable setup. If this should not be possible we want to be able to tell which factors make such a model difficult to implement and how it could probably be achieved after all.
+Core questions will be:
+\begin{itemize}
+\item Is the model accurate, therefore do the walking patterns that we've simulated match the empirical ones?
+\item Do they match in length?
+\item Do they match in directions?
+\item Do they match in distribution?
+\item How does the memory effect the path pattern?
+\item Also, do the decisions which the ants learned make sense?
+\item Are we able to predict what happens if we alter the environment? (depends on the question beforehand)
+\item Can the ants survive if we rid the environment completely of any landmarks?
+\item Can the ants survive if the landmarks constantly change?
+\item Can the ants survive if temperature would increase (pheromones will last shorter, ants have to come back to the nest faster)? 
+\end{itemize}
+As indicators of survival and the other parameters we can use the success-funciton as well as the agent properties that belong to our model.
+\section*{Expected Results}
+
+The article we base our work upon does state that its conditions might be flawed in some ways. The provided experimental data however looks promising so we expect:
+\begin{itemize}
+\item That the patterns should be produced in a similar way as in the experiments. Therefore:
+\item That the lengths of the paths match with the real ones.
+\item That the directions of the paths are chosen as in reality.
+\item That the ants distribute themselves reasonable among the food sources.
+\item That the implemented memory causes the ants to extend the search radius once a food source has run out. This means the ant should look for new sources starting from the old source.
+\item That the ants can switch to another method of navigation should the need arise?
+\item That the ants behavior becomes predictable. Therefore:
+\item That ants can survive if landmark navigation is impossible by using the other 2 methods.
+\item That ants can survive even if the conditions of their environment gets harsher provided they have enough resources in their proximity.
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \newpage
 \appendix
 \section{Appendix}
