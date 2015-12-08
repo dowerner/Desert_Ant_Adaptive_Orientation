@@ -248,7 +248,7 @@ Speed of cataglyphis fortis $\approx 1 \frac{m}{s}$
 \begin{frame}
 \frametitle{Pathintegrator-model \footnote{Wehner1988}}
 \begin{align*}
-\varphi_(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\dot \delta}{l(n)}\\
+\varphi_(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\cdot \delta}{l(n)}\\
 l(n+1) =& l(n) +1 -\frac{|\delta|}{\pi}
 \end{align*}
 where $k$ is a normalization constant, $\delta$ is the angle with which the ant is turning its current direction and the step width is assumed to be 1.
@@ -265,32 +265,67 @@ where $k$ is a normalization constant, $\delta$ is the angle with which the ant 
 \begin{frame}
 \frametitle{Discussion of the pathintegrator}
 
-\begin{itemize}
-\item ...
-\item ... 
-\item .. 
-\end{itemize}
 
+\only<1>{
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./Pics/0_degrees.jpg} 
+\caption{0 degrees }
+\end{figure} 
+} 
+
+
+\only<2>{
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./Pics/40_degrees.jpg} 
+\caption{40 degrees }
+\end{figure} 
+} 
+
+
+\only<3>{
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./Pics/80_degrees.jpg} 
+\caption{80 degrees }
+\end{figure} 
+} 
+
+
+\only<4>{
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./Pics/120_degrees.jpg} 
+\caption{120 degrees }
+\end{figure} 
+} 
+\end{frame}
+
+
+
+\subsection{Discussion of the ant's random walk}
+\begin{frame}
+\frametitle{Discussion of the ant's random walk}
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.2]{./Pics/VarianceForStepWidth_plot.png} 
-\caption{Variance for stepwidth \label{fig:Variance} }
+\caption{Variance for stepwidth}
 \end{figure} 
 \end{frame}
 
 
 
 
-
-\subsection{Results of the pathintegrator}
+\subsection{Verification of the pathintegrator}
 \begin{frame}
 \frametitle{Results of the pathintegrator}
 \only<1>{ 
-\begin{itemize}
-\item ...
-\item ... 
-\item .. 
-\end{itemize}
+\begin{enumerate}
+\item ant walks 12 m in a fixed direction
+\item then turns an angle $\alpha$ walks 5 more meters, where it finds food
+\item the ant returns with a certain error.
+\end{enumerate}
 
 
 \begin{figure}[H]
@@ -303,11 +338,11 @@ where $k$ is a normalization constant, $\delta$ is the angle with which the ant 
 
 
 \only<2>{ 
-\begin{itemize}
-\item ...
-\item ... 
-\item .. 
-\end{itemize}
+\begin{enumerate}
+\item ant walks 12 m in a fixed direction
+\item then turns an angle $\alpha$ walks 5 more meters, where it finds food
+\item the ant returns with a certain error.
+\end{enumerate}
 
 
 \begin{figure}[H]
