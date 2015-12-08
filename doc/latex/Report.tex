@@ -62,6 +62,7 @@ numberstyle=\sffamily\scriptsize\color{lightgray}
 
 
 \begin{document}
+\pagenumbering{roman}
 \renewcommand{\figurename}{Figure}
 
 \input{cover}
@@ -70,6 +71,7 @@ numberstyle=\sffamily\scriptsize\color{lightgray}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newpage
+\setcounter{page}{1}
 \section*{Agreement for free-download}
 \bigskip
 
@@ -144,7 +146,7 @@ The Saharan Desert ant (Cataglyphis Fortis) lives under harsh environmental cond
 German biologist Wehner \cite{Wehner2003},\cite{Wehner1988}, \cite{Wehner1998} has proposed two such means. Namely path integration and orientation by landmarks.
 In his final conclusion he considers both methods important and assumes that the ant has a way of adopting the priority of each mechanism according to the current situation.\\
 \ \\
- In previous years a group called gordonteam\cite{GordonTeam2008} already implemented a model based on the before mentioned articles. In their report they noted that their path integration did not work and that they were not able to combine all methods. Our plan is to extend upon their work and fix the problems as well as to bind all methods together. 
+ In previous years a group called gordonteam\cite{GordonTeam2008} already implemented a model based on the before mentioned articles. In their report they noted that their path integration did not work and that they were not able to combine all methods. Our plan is to extend upon their work and fix the problem with the path integrator as well as to bind the two methods together. 
 
 \newpage
 \section{Individual contributions}
@@ -159,7 +161,7 @@ We divided the work as follows:
 \item Timer: Andreas Urech
 \item Ant looking around behaviour: Florian Hasler
 \item Project report: Andreas Urech, Florian Hasler, Matthias Heinzmann, Dominik Werner
-\item \LaTeX - version of report an documentation: Andreas Urech
+\item \LaTeX - version of report and presentation: Andreas Urech
 \end{itemize}
 
 \section{Introduction and Motivations}
@@ -222,7 +224,14 @@ where $k=0.1316$ is a fitting constant Wehner1988 \cite{Wehner1988}, $\delta$ is
 
 
 \subsection{Local landmark Orientation}
-....
+Desert ants can associate familiar landmarks with a local vector, which can lead them directly from one place to the visual catchment area of the next one (Wehner2003 \cite{Wehner2003}).\\
+Therefore, as soon as an ant recognizes a landmark it knows where to go to reach the next landmark or the nest respectively given that it has already familiarized with this landmark.  
+For our implementation, we simplified this ability, i.e. the local vector, in the following way. 
+As soon as the ant sees a landmark it goes there. When arrived, the ant walks $N$ steps in a direction $d$ where $N$ and $d$ are determined by the landmark’s properties. Like that, the local vector is implicitly defined by $N$ and $d$. The ant reaches the next landmark or the nest respectively after having walked along the local vector. 
+For simplicity’s sake, we assumed that all landmarks are familiar to all ants at the start of our simulation.
+
+
+
 
 
 \subsection{Combination} \label{Sec:Combination}
@@ -425,8 +434,16 @@ Now the ant does one step with a specific step width $l$. The direction is given
 \caption{Pathintegrator error \label{fig:PathintegratorError} }
 \end{figure} 
 
-
-
+\textcolor{red}{
+One can easily observe figure 2 that the expected error is quite low for small turning angles delta but increases drastically for bigger turning angles. Thus, if the ant ‘wants’ to be safely lead back to the nest by using this path integrator model the expected value of the distribution mu should always be near 0. This means that in principle the ant would have to walk radially out of the nest. There are three possibilities to solve this issue:
+\begin{itemize}
+\item Deserts ants do actually walk radially out in principle. Here, ‘in principle’ means that they can walk to the left or to right respectively but afterwards they have to walk in the other direction which leads to a zig-zag walk around a path pointing radially out of the nest. 
+\item Desert ants can’t find home without the use of landmarks to a relatively large amount.
+One would have to do further experiments to prove or disprove these two possibilities. If they are wrong, we consequently have to consider a third and last possibility.
+\item The path integrator model has to be extended for that it works in the situation we wanted to apply it in our project.
+\end{itemize}
+}
+\subsection{Discussion of the ant's random walk}
 To improve the performance of the path integrator as well as to make to walk of the ant more detailed one would be able to vary the step width $l$. 
 But by varying $l$ we end up with a new problem. The path the ant walks along is strongly influenced by the choice of $l$. What we would like to have though is that the ant walks in a similar way no matter what the step size is. 
 To address this problem we set the variance in the distribution of the turning angle $\vartheta$ in relation to dt (step width l of the ant is determined by l = dt*antSpeed) . 
