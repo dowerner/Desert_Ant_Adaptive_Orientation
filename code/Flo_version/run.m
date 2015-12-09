@@ -1,24 +1,40 @@
+%**************************************************************************
+%* Project: Desert ant navigational behaviour
+%* Developers: Florian Hasler, Matthias Heinzmann, Andreas Urech,
+%*             Dominik Werner
+%* Description: This project simulates the foraging behaviour of Saharan
+%*              desert ants.
+%* Usage: To run this project execute run.m. The setup can also be changed
+%*        in this file with the following parameters:
+%*          - nestLocation
+%*          - nAnts
+%*          - nFoodSources
+%*          - nLandmarks
+%**************************************************************************
+
 function run(dt,printFlag)
     if nargin == 0
-        dt = 0.3;
+        dt = 0.3; % time step
         printFlag = false;
     end
 
-    nestLocation = [0;0];
+    nestLocation = [0;0]; % location of ant nest
     
     global add % global variable to check if new food sources were added
     global coords % coordinates to spawn source
     global exit % handling clean exit
+    
+    % help variables
     add = 0;
     exit = 0;
     coords = [0;0];
     
     ground = Ground;
-    ground.timeLapseFactor = 10000;
+    ground.timeLapseFactor = 10000; % simulaiton speed (eg. timePerStep = (1/TimeLapseFactor))
     ground.nestLocation = nestLocation;
     
     % place ants
-    nAnts = 10;
+    nAnts = 10; % number of ants to spawn
     ants = Ant(zeros(nAnts,1));
     for i = 1 : length(ants)
         ants(i) = Ant;
@@ -27,7 +43,7 @@ function run(dt,printFlag)
     ground.ants = ants;
 
     % place food sources
-    nFoodSources = 5;
+    nFoodSources = 5; % number of food sources to spawn
     foodSourceDistance = 100;
     xCoord = foodSourceDistance*(2*rand(1,nFoodSources)-1);
     yCoord = foodSourceDistance*(2*rand(1,nFoodSources)-foodSourceDistance);
@@ -37,7 +53,7 @@ function run(dt,printFlag)
     end
     
     % place landmarks
-    nLandmarks = 5;
+    nLandmarks = 5; % number of landmarks to spawn
     landmarkDistance = 10;
     xCoord = landmarkDistance*(2*rand(1,nLandmarks)-1);
     yCoord = landmarkDistance*(2*rand(1,nLandmarks)-1);
