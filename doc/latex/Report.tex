@@ -151,7 +151,7 @@ In his final conclusion he considers both methods important and assumes that the
 \newpage
 \section{Individual contributions}
 We split up the work among the members of our group based upon their past experience in various topics and skills needed to develop the project. 
-In order for every member to understand the project in its entirety and can make additions if needed we had meetings once a week where every member presented his work to the rest of the group. In those meetings we also discussed how to proceed with the project.
+In order for every member to understand the project in its entirety and to be able to make additions if needed we had meetings once a week where every member presented his work to the rest of the group. In those meetings we also discussed how to proceed with the project.
 We divided the work as follows:
 \begin{itemize}
 \item Path integrator: Florian Hasler, Matthias Heinzmann
@@ -236,7 +236,7 @@ For simplicity’s sake, we assumed that all landmarks are familiar to all ants 
 
 \subsection{Combination} \label{Sec:Combination}
 %It is not that the various means of orientations are combined in a weighted fashion. Given certain criteria the different means are used separately.\\
-The results gained R. Wehner's experiments indicate that ants use predominantly pathintegration, but if available using local landmarks is more preferable to using the global vector-navigation via pathintegration. It has been concluded that the ant transiently inhibits the global vector when being in familiar territory. The global vector only reemerges after the local vector ceases. Whilst navigating via the local vector the global vector is continuously updated.
+The results gained by R. Wehner's experiments indicate that ants use predominantly path integration, but if available using local landmarks is more preferable. It has been concluded that the ant transiently inhibits the global vector when being in familiar territory. The global vector reemerges after the local vector ceases. Whilst navigating via the local vector the global vector is continuously updated.
 \\ \
 
 \begin{algorithm}[H]
@@ -367,8 +367,7 @@ method does update the plot and redraws all ants, food sources, the nest and the
 
 
 \subsubsection{Landmark.m}
-[Listing \ref{"list:Landmark.m"} in \ref{Landmark}]. This class represents a visual landmark. It is defined as having a location, a direction vector and a
-status which is represented by a number. The direction vector is used by incoming ants to leave the
+[Listing \ref{"list:Landmark.m"} in \ref{Landmark}]. This class represents a visual landmark. It is defined as having a location, a direction vector a status which is represented by a bool and steps to follow which determines how many steps has to take after the landmark. The direction vector is used by incoming ants to leave the
 landmark in the direction provided by the landmark. This is supposed to mimic the ants procedural
 memory.
 
@@ -382,16 +381,14 @@ our ants aren't real and do not have a limited field of view but can see 360 deg
 a property which tells the ant if it is leaving the nest so it doesn't immediately go back to the nest
 after it left it. This is due to the assumption that foraging ants that come across their nest during
 their searches, reset their global vector to correct errors or in other words, they will use the local
-vector rather than the global vector (as described in  \ref{Sec:Combination}) . Furthermore we have a much more mathematical problem
+vector rather than the global vector (as described in  \ref{Sec:Combination}) . Furthermore we have a severe mathematical problem
 when we are near the nest. Because we divide by the length of our global vector we cause a division
 by zero in our update method once the global vectors length becomes zero. To avoid this we
 actually wait until the nest is outside of the ants view distance and set the length of the global vector
 to the view distance. It is reasonable to assume that the real ants do something similar because of
 the before mentioned local vector.\\
 \ \\
-Also important is the method that takes a random step. The math behind this method is discussed in
-detail in another chapter here we just describe the implementation. The implementation is basically
-the math plus the calling of the update method to set the ants position after the calculation is done.\\
+Also important is the method that takes a random step. For that, the ant randomly chooses the angle which it turns its direction in the next step out of a probability distribution with expected value $0$ and variable variance $\sigma_{0}^{2}$. \\
 \ \\
 As described above the ants vision was simplified for the implementation and a field of view is not
 implemented. Once the ant is within view distance of an object (food source, landmark, nest) it
@@ -531,14 +528,15 @@ In terms of the implemented model we were able to reproduce the error profile gi
 \subsection{Ant.m}\label{Ant}
 \lstinputlisting[captionpos=b,caption=Ant.m,label="List:Ant.m"]{./Code/Ant.m}
 
-
-
+\newpage
+\section{Decleration of originality}
+\includegraphics[scale=0.5]{./Pics/email2.png}% 
 
 \newpage
 
 
 \section{Correspondence} \label{Sec:Correspondence}
-R. Whener ,author of \cite{Wehner2003},\cite{Wehner1988}, \cite{Wehner1998} kindly answered us a few questions.\\
+R. Wehner ,author of \cite{Wehner2003},\cite{Wehner1988}, \cite{Wehner1998} kindly answered us a few questions.\\
 
 
 \includegraphics[scale=0.5]{./Pics/email2.png}% 
