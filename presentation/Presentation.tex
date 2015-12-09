@@ -280,7 +280,7 @@ Speed of cataglyphis fortis $\approx 1 \frac{m}{s}$
 \varphi_(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\cdot \delta}{l(n)}\\
 l(n+1) =& l(n) +1 -\frac{|\delta|}{\pi}
 \end{align*}
-where $k$ is a normalization constant, $\delta$ is the angle with which the ant is turning its current direction and the step width is assumed to be 1.
+where $k = 0.1316$ is a fitting constant , $\delta$ is the angle with which the ant is turning its current direction and the step width is assumed to be 1.
 
 
 
@@ -335,6 +335,10 @@ where $k$ is a normalization constant, $\delta$ is the angle with which the ant 
 
 \subsection{Discussion of the ant's random walk}
 \begin{frame}
+Ansatz: $\sigma = dt^{c} \cdot \sigma_{0} \ \ \ \ \ c \in (0,1]$ 
+
+
+
 \frametitle{Discussion of the ant's random walk}
 \begin{figure}[H]
 \centering
@@ -434,7 +438,20 @@ Comparison
 \begin{frame}
 \frametitle{Local Orientation}
 \begin{center}
-Bla bla
+
+\only<1>{
+\begin{itemize}
+\item familiar landmarks are memorized in the correct sequence.
+\end{itemize}
+}
+
+\only<2>{
+\begin{itemize}
+\item familiar landmarks are memorized in the correct sequence.
+\item number of steps to follow and direction representing the local vector.
+\end{itemize}
+}
+
 \end{center}
 \end{frame}
 
@@ -442,7 +459,24 @@ Bla bla
 \begin{frame}
 \frametitle{Outlook and Conclusions}
 \begin{center}
-Bla bla
+
+\only<1>{
+\begin{itemize}
+\item Does our model meet the requirements?
+\item Are we able to predict ant behaviour?
+\item Outlook
+\end{itemize}
+}
+
+
+
+
+
+
+
+
+
+
 \end{center}
 \end{frame}
 
