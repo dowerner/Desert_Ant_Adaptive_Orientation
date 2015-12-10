@@ -196,7 +196,18 @@ In Wehner1988\cite{Wehner1988}\footnote{on page 5288} the following formulas hav
 \varphi_(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\cdot \delta}{l(n)}\\
 l(n+1) =& l(n) +1 -\frac{|\delta|}{\pi}
 \end{align*}
-where $k=0.1316$ is a fitting constant Wehner1988 \cite{Wehner1988}, $\delta$ is the angle with which the ant is turning its current direction and the step width is assumed to be 1.
+where $k=0.1316$ is a fitting constant Wehner1988 \cite{Wehner1988}, $\delta$ is the angle between the current walking direction (thick line in figure \ref{fig:Delta}) and an artificial line back to the nest.The step width is assumed to be 1.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=1]{./Pics/delta.png} 
+\caption{Angle $\delta$ \label{fig:Delta} }
+\end{figure} 
+
+
+
+
+
 %In the following we will discuss the quality of this specific path integrator model.
 %Let’s assume that the ant is currently at a position $l = L$ and $\varphi = 0$ (we can assume $\varphi = 0$ without loss of generality because if $\varphi ~= 0$ we would simply rotate our coordinate system to obtain $\varphi’ = 0$ again). Furthermore, the global vector at this point is assumed to be perfect, which means that it directly points from the nest to the ant’s position. 
 %Now the ant does one step with a specific step width $l$. The direction is given by the turning angle delta which is assumed to be normal distributed with $\mu = 0$ and $\sigma = \frac{\pi}{16}$.  
