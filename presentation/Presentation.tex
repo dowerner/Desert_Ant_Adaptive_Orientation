@@ -88,80 +88,28 @@ Florian Hasler, Matthias Heinzmann, Andreas Urech, Dominik Werner
 \only<1>{
  \begin{figure}[H]
  \centering
- \includegraphics[scale=0.7]{./Pics/meisi.png} 
- \caption{Cataglyphis fortis \footnote{http://www.lambrinos.ch December 5th 2015} \label{fig:Variance} }
+ \includegraphics[scale=0.6]{./Pics/meisi.png} 
+ \caption{Cataglyphis Fortis \footnote{http://www.lambrinos.ch December 5th 2015} \label{fig:Variance} }
  \end{figure}  
 \begin{center} 
 \end{center} 
 }
 
 
-
-
-
-
-
-
-
-
-
-
 \only<2>{
- \begin{figure}[H]
- \centering
- \includegraphics[scale=0.6]{./Pics/WhatAbout.png} 
- \caption{Foraging walks Wehner2003 \label{fig:Variancea} }
- \end{figure} 
-\begin{center} 
-\end{center} 
-}
-
-
-
-
-
-
-
-\only<3>{\begin{itemize}
-\item one ant,  one prey $\rightarrow$ no further communication needed
-
-\end{itemize}
- \begin{figure}[H]
- \centering
- \includegraphics[scale=0.6]{./Pics/WhatAbout.png} 
- \caption{Foraging walks Wehner2003 \label{fig:Variancea} }
- \end{figure} 
-\begin{center} 
-\end{center} 
-}
-
-\only<4>{\begin{itemize}
-\item one ant,  one prey $\rightarrow$ no further communication needed
-\item Why is time, hence the shortest way back so crucial?
-
-\end{itemize}
- \begin{figure}[H]
- \centering
- \includegraphics[scale=0.6]{./Pics/WhatAbout.png} 
- \caption{Foraging walks Wehner2003} \label{fig:Variancea}
- \end{figure} 
-\begin{center} 
-\end{center} 
-}
-
-
-
-
-
-
-
-
-\only<5>{\begin{itemize}
+Some facts:
+\begin{itemize}
 \item one ant,  one prey $\rightarrow$ no further communication needed
 \item Why is time, hence the shortest way back so crucial?
 \item Distances in relation to ant's size.\\
 Speed of cataglyphis fortis $\approx 1 \frac{m}{s}$
 \end{itemize}
+}
+
+
+
+
+\only<3>{
  \begin{figure}[H]
  \centering
  \includegraphics[scale=0.6]{./Pics/WhatAbout.png} 
@@ -195,13 +143,13 @@ Speed of cataglyphis fortis $\approx 1 \frac{m}{s}$
 \begin{center} 
 \only<1>{ 
 \begin{itemize}
-\item Pathintegration
+\item Path integration
 \end{itemize}
  } 
 % 
 \only<2>{ 
 \begin{itemize}
-\item Pathintegration and
+\item Path integration and
 \item Local Orientation
 \end{itemize}
 } 
@@ -269,13 +217,13 @@ Speed of cataglyphis fortis $\approx 1 \frac{m}{s}$
 
 \end{frame}
 
-\section{Pathintegrator}
+\section{Path integrator}
 
 
 
 \subsection{Pahtintegrator-model}
 \begin{frame}
-\frametitle{Pathintegrator-model \footnote{Wehner1988}}
+\frametitle{Path integrator-model \footnote{Wehner1988}}
 \begin{align*}
 \varphi_(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\cdot \delta}{l(n)}\\
 l(n+1) =& l(n) +1 -\frac{|\delta|}{\pi}
@@ -290,9 +238,9 @@ where $k = 0.1316$ is a fitting constant , $\delta$ is the angle with which the 
 
 \end{frame}
 
-\subsection{Discussion of the pathintegrator}
+\subsection{Discussion of the path integrator}
 \begin{frame}
-\frametitle{Discussion of the pathintegrator}
+\frametitle{Discussion of the path integrator}
 
 
 \only<1>{
@@ -350,9 +298,9 @@ Ansatz: $\sigma = dt^{c} \cdot \sigma_{0} \ \ \ \ \ c \in (0,1]$
 
 
 
-\subsection{Verification of the pathintegrator}
+\subsection{Verification of the path integrator}
 \begin{frame}
-\frametitle{Verification of the pathintegrator}
+\frametitle{Verification of the path integrator}
 \only<1>{ 
 \begin{enumerate}
 \item ant walks 12 m in a fixed direction
