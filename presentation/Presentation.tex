@@ -223,13 +223,27 @@ Speed of cataglyphis fortis $\approx 1 \frac{m}{s}$
 
 \subsection{Pahtintegrator-model}
 \begin{frame}
+\only<1>{
 \frametitle{Path integrator-model \footnote{Wehner1988}}
 \begin{align*}
-\varphi_(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\cdot \delta}{l(n)}\\
+\varphi(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\cdot \delta}{l(n)}\\
 l(n+1) =& l(n) +1 -\frac{|\delta|}{\pi}
 \end{align*}
-where $k = 0.1316$ is a fitting constant , $\delta$ is the angle with which the ant is turning its current direction and the step width is assumed to be 1.
-
+ }
+ \only<2>{
+ 
+Fitting constant $k$:\\ 
+$k = 0.1316$ 
+\ \\
+\ \\
+\ \\
+Turning angle $\delta$:
+\begin{figure}[H]
+%\centering
+\includegraphics[scale=1]{./Pics/delta.png} 
+\caption{angle $\delta$ }
+\end{figure} 
+}
 
 
 
