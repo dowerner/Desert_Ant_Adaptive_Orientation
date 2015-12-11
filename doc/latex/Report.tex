@@ -193,7 +193,7 @@ This is because the prey usally consists of small parts of insects, that can be 
 No matter the random way out of its nest, the ant is able to return in a more or less straight line. This remarkable ability is reached by pathintegration. Therefore the ant is always aware in which direction its nest is located. These calculations are executed with imperfections which accumulate with growing path length. In extreme cases pathintegration causes the ant to miss its nest and other means of orientation are necessary. \\
 In Wehner1988\cite{Wehner1988}\footnote{on page 5288} the following formulas have been derived, which give a rough approximation of the ants pathintegration.
 \begin{align*}
-\varphi_(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\cdot \delta}{l(n)}\\
+\varphi(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\cdot \delta}{l(n)}\\
 l(n+1) =& l(n) +1 -\frac{|\delta|}{\pi}
 \end{align*}
 where $k=0.1316$ is a fitting constant Wehner1988 \cite{Wehner1988}, $\delta$ is the angle between the current walking direction (thick line in figure \ref{fig:Delta}) and an artificial line back to the nest.The step width is assumed to be 1.
@@ -422,14 +422,14 @@ stop moving thus being dead.
 \section{Simulation Results and Discussion}
 \subsection{Discussion of the Pathintegrator}
 The general idea of the path integrator is described in section \ref{Sec:PathIntegration}. In the following we will discuss the quality of this specific path integrator model.
-Let’s assume that the ant is currently at a position $l = L$ and $\varphi = 0$ (we can assume $\varphi = 0$ without loss of generality because if $phi \approx 0$ we would simply rotate our coordinate system to obtain $\varphi’ = 0$ again). Furthermore, the global vector at this point is assumed to be perfect, which means that it directly points from the nest to the ant’s position. \\
-Now the ant does one step with a specific step width $l$. The direction is given by the turning angle $\delta$ which is assumed to be normal distributed with expectation value $\mu$ and standard deviation $\sigma = \frac{\pi}{16}$ where $\mu$ corresponds to the direction the ant has been walking in the previous step. Of course, the path integrator critically depends on this $\mu$ as can be seen in figure \ref{fig:Variance} (plots for $\mu=0,40,80,120^{\circ}$). In figure \ref{fig:PathintegratorError} , the first row illustrates the absolute expected error of the path integrator while the second row illustrates the expected error relative to the step width l.
+Let’s assume that the ant is currently at a position $l = L$ and $\varphi = 0$ (we can assume $\varphi = 0$ without loss of generality because if $\varphi \approx 0$ we would simply rotate our coordinate system to obtain $\varphi’ = 0$ again). Furthermore, the global vector at this point is assumed to be perfect, which means that it directly points from the nest to the ant’s position. \\
+Now the ant does one step with a specific step width $l$. The direction is given by the turning angle $\delta$ which is assumed to be normal distributed with expectation value $\mu$ and standard deviation $\sigma = \frac{\pi}{16}$ where $\mu$ corresponds to the direction the ant has been walking in the previous step. Of course, the path integrator critically depends on this $\mu$ as can be seen in figure \ref{fig:PathintegratorError} (plots for $\mu=0,40,80,120^{\circ}$). In figure \ref{fig:PathintegratorError}, the first row illustrates the absolute expected error of the path integrator while the second row illustrates the expected error relative to the step width l.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.31]{./Pics/Pathintegrator_error_plot.png} 
 \caption{Pathintegrator error \label{fig:PathintegratorError} }
 \end{figure} 
-One can easily observe figure 2 that the expected error is quite low for small turning angles delta but increases drastically for bigger turning angles. Thus, if the ant ‘wants’ to be safely lead back to the nest by using this path integrator model the expected value of the distribution mu should always be near 0. This means that in principle the ant would have to walk radially out of the nest. There are three possibilities to solve this issue:
+One can easily observe in figure \ref{fig:PathintegratorError}  that the expected error is quite low for small turning angles delta but increases drastically for bigger turning angles. Thus, if the ant ‘wants’ to be safely lead back to the nest by using this path integrator model the expected value of the distribution $\mu$ should always be near 0. This means that in principle the ant would have to walk radially out of the nest. There are three possibilities to solve this issue:
 \begin{itemize}
 \item Deserts ants do actually walk radially out in principle. Here, ‘in principle’ means that they can walk to the left or to right respectively but afterwards they have to walk in the other direction which leads to a zig-zag walk around a path pointing radially out of the nest. 
 \item Desert ants can’t find home without the use of landmarks to a relatively large amount.
@@ -440,7 +440,7 @@ One would have to do further experiments to prove or disprove these two possibil
 \subsection{Discussion of the ant's random walk}
 To improve the performance of the path integrator as well as to make the walk of the ant more detailed one would be able to vary the step width $l$. 
 But by varying $l$ we end up with a new problem. The foraging walk along is strongly influenced by the choice of $l$. What we would like to have though is that the ant walks in a similar way no matter what the step size is. 
-To address this problem we set the variance in the distribution of the turning angle $\vartheta$ in relation to dt (step width l of the ant is determined by l = dt*antSpeed) . 
+To address this problem we set the variance in the distribution of the turning angle $\delta$ in relation to dt (step width l of the ant is determined by l = dt*antSpeed) . 
 We made the following ansatz: $\sigma(dt) = dt^{c} \cdot \sigma_{0}$ with $c \in (0,1]$ and $\sigma_{0}$ the standard deviation for $dt = 1$.
 Then we let the ant do $n1=1$ steps with $dt=1$ and $n2=\frac{1}{dt}$ steps with some $dt \in (0,1]$.Finally we correlated the resulting positions of the two situations and looked for the best correlation, i.e. $c$ such that the difference between the two situations is lowest. 
 The result for a normal distribution with $\mu = 0$ and $sigma_{0} = \frac{\pi}{12}$ and $dt = 0.1$ can be seen in the figure \ref{fig:Variance} below.
