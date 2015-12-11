@@ -184,29 +184,25 @@ As mentioned the desert ant's main means of orientation are:
 \item local landmark orientation
 \end{itemize}
 The cataglyphis doesn't communicate with its conspecifics on a foraging walk.
-This is because the prey usally consists of small parts of insects, that can be carried by one ant, and no need for sharing information arises. [Appendix \ref{Sec:Correspondence}]
+This is because the prey usually consists of small parts of insects, that can be carried by one ant, and no need for sharing information arises. [Appendix \ref{Sec:Correspondence}]
 
 
 
 
 \subsubsection{Pathintegration}\label{Sec:PathIntegration}
-No matter the random way out of its nest, the ant is able to return in a more or less straight line. This remarkable ability is reached by pathintegration. Therefore the ant is always aware in which direction its nest is located. These calculations are executed with imperfections which accumulate with growing path length. In extreme cases pathintegration causes the ant to miss its nest and other means of orientation are necessary. \\
+Regardlessly how complicated the way out of its nest may be, the ant is able to return in a more or less straight line. This remarkable ability is achieved  by pathintegration. Therefore the ant is always aware in which direction its nest is located. These calculations are executed with imperfections which accumulate with growing path length. In extreme cases pathintegration causes the ant to miss its nest and other means of orientation are necessary.
 In Wehner1988\cite{Wehner1988}\footnote{on page 5288} the following formulas have been derived, which give a rough approximation of the ants pathintegration.
 \begin{align*}
 \varphi(n+1) =& \varphi(n) +k \cdot \frac{(\pi +\delta)\cdot(\pi-\delta)\cdot \delta}{l(n)}\\
 l(n+1) =& l(n) +1 -\frac{|\delta|}{\pi}
 \end{align*}
-where $k=0.1316$ is a fitting constant Wehner1988 \cite{Wehner1988}, $\delta$ is the angle between the current walking direction (thick line in figure \ref{fig:Delta}) and an artificial line back to the nest.The step width is assumed to be 1.
-
+With $\varphi (n)$ as the assumed angle pointing from the nest to the ant and $l(n)$ the assumed covered distance, $\varphi (n)$ and $l(n)$ form the global vector.
+ $k=0.1316$ is a fitting constant Wehner1988\cite{Wehner1988}, $\delta$ is the angle between the current walking direction (thick line in figure \ref{fig:Delta}) and an artificial line back to the nest.The step width is assumed to be 1.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=1]{./Pics/delta.png} 
 \caption{Angle $\delta$ \label{fig:Delta} }
 \end{figure} 
-
-
-
-
 
 %In the following we will discuss the quality of this specific path integrator model.
 %Let’s assume that the ant is currently at a position $l = L$ and $\varphi = 0$ (we can assume $\varphi = 0$ without loss of generality because if $\varphi ~= 0$ we would simply rotate our coordinate system to obtain $\varphi’ = 0$ again). Furthermore, the global vector at this point is assumed to be perfect, which means that it directly points from the nest to the ant’s position. 
@@ -343,7 +339,7 @@ interface provides the following functions:
 \item \textbf{Spawn new food source:} New sources of food for the ants to collect can be spawned by
 simply clicking at the location in the world were the source should appear.
 \item \textbf{Close:} In order for the program to terminate without errors we used a callback-function
-from closing event of our plot-figure to terminate the program.
+from the closing event of our plot-figure to terminate the program.
 \end{itemize}
 
 
@@ -388,7 +384,7 @@ actually wait until the nest is outside of the ants view distance and set the le
 to the view distance. It is reasonable to assume that the real ants do something similar because of
 the before mentioned local vector.\\
 \ \\
-Also important is the method that takes a random step. For that, the ant randomly chooses the angle which it turns its direction in the next step out of a probability distribution with expected value $0$ and variable variance $\sigma_{0}^{2}$. \\
+Also important is the method that takes a random step. For that, the ant randomly chooses the angle which it turns its direction in the next step out of a probability distribution with expected value $0$ and variable variance  $\sigma_{0}^{2}$ (see also section \ref{sec:Discussion}). \\
 \ \\
 As described above the ants vision was simplified for the implementation and a field of view is not
 implemented. Once the ant is within view distance of an object (food source, landmark, nest) it
@@ -426,7 +422,7 @@ Let’s assume that the ant is currently at a position $l = L$ and $\varphi = 0$
 Now the ant does one step with a specific step width $l$. The direction is given by the turning angle $\delta$ which is assumed to be normal distributed with expectation value $\mu$ and standard deviation $\sigma = \frac{\pi}{16}$ where $\mu$ corresponds to the direction the ant has been walking in the previous step. Of course, the path integrator critically depends on this $\mu$ as can be seen in figure \ref{fig:PathintegratorError} (plots for $\mu=0,40,80,120^{\circ}$). In figure \ref{fig:PathintegratorError}, the first row illustrates the absolute expected error of the path integrator while the second row illustrates the expected error relative to the step width l.
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.31]{./Pics/Pathintegrator_error_plot.png} 
+\includegraphics[scale=0.39]{./Pics/Pathintegrator_error_plot.png} 
 \caption{Pathintegrator error \label{fig:PathintegratorError} }
 \end{figure} 
 One can easily observe in figure \ref{fig:PathintegratorError}  that the expected error is quite low for small turning angles delta but increases drastically for bigger turning angles. Thus, if the ant ‘wants’ to be safely lead back to the nest by using this path integrator model the expected value of the distribution $\mu$ should always be near 0. This means that in principle the ant would have to walk radially out of the nest. There are three possibilities to solve this issue:
@@ -437,13 +433,13 @@ One would have to do further experiments to prove or disprove these two possibil
 \item The path integrator model has to be extended for that it works in the situation we wanted to apply it in our project.
 \end{itemize}
 
-\subsection{Discussion of the ant's random walk}
+\subsection{Discussion of the ant's random walk}\label{sec:Discussion}
 To improve the performance of the path integrator as well as to make the walk of the ant more detailed one would be able to vary the step width $l$. 
 But by varying $l$ we end up with a new problem. The foraging walk along is strongly influenced by the choice of $l$. What we would like to have though is that the ant walks in a similar way no matter what the step size is. 
 To address this problem we set the variance in the distribution of the turning angle $\delta$ in relation to dt (step width l of the ant is determined by l = dt*antSpeed) . 
 We made the following ansatz: $\sigma(dt) = dt^{c} \cdot \sigma_{0}$ with $c \in (0,1]$ and $\sigma_{0}$ the standard deviation for $dt = 1$.
 Then we let the ant do $n1=1$ steps with $dt=1$ and $n2=\frac{1}{dt}$ steps with some $dt \in (0,1]$.Finally we correlated the resulting positions of the two situations and looked for the best correlation, i.e. $c$ such that the difference between the two situations is lowest. 
-The result for a normal distribution with $\mu = 0$ and $sigma_{0} = \frac{\pi}{12}$ and $dt = 0.1$ can be seen in the figure \ref{fig:Variance} below.
+The result for a normal distribution with $\mu = 0$ and $\sigma_{0} = \frac{\pi}{12}$ and $dt = 0.1$ can be seen in the figure \ref{fig:Variance} below.
 Afterwards, we tried out several different $dt’s$ and $\sigma_{0}’s$ but the result for c was always similar to the one in the left side of the figure. The value for the best fitting c can be seen in figure \ref{fig:Variance} as being approximately 0.3.  
 
 \begin{figure}[H]
@@ -458,7 +454,7 @@ Afterwards, we tried out several different $dt’s$ and $\sigma_{0}’s$ but the
 
 To verify, if we implemented the path integrator correctly, we let the ants do the same experiment as described in Wehner1988 \cite{Wehner1988}.
 The ant starts at the nest and walks 12 meters from the nest in a fixed direction. After that it turns an angle $\alpha$ and walks another 5 meters in this direction, where it finds food. At this point Wehner and Müller measured the angle the ants would take to find home and calculated the error in comparison to the exact position of the nest.
-Our results produced look exactly the same, what indicates, that we implemented the path integrator in the way Wehner and Müller think it is correct.\\
+Our results produced look exactly the same, what indicates, that we implemented the path integrator in the way Wehner and Müller intended it.\\
 
 
 \begin{figure}[h!]%
@@ -488,17 +484,21 @@ In figure \ref{fig:AngErrorProd}, we see the angular error of our Matlab simulat
 
 
 \section{Summary and Outlook}
-In the following section we would like to discuss our findings and provide an outlook on what could also be looked at in future projects.\\
-\\ \\
+In the following section we would like to discuss our findings and provide an outlook on what could also be looked at in future projects.
+\\ \\ \\
 \textit{Are we able to predict what happens if we alter the environment? (depends on the question beforehand) } \\ \\
 We were able to run the simulation in different environments (different landmarks and variable food source locations). As a result we saw that the ants navigational behaviour strongly depends on the setup of the landmarks.
 \\ \\ \\
 \textit{Can the ants survive if we rid the environment completely of any landmarks?}
 \\ \\
 When the ant remains in radius of about ten meters around the nest it has no trouble to find back to the nest without the aid of visual landmarks. If the ants foraging radius reaches further, which in reality is often the case many ants will get lost along the way which makes landmarks essential at those distances. However, we do not know whether this also applies to real ants or if this effect is just an artifact of the employed model. This possibility cannot be dismissed since we used the model for a different purpose than it was originally designed for.
-\\ \\ \\
+\\ \\ 
 In terms of the implemented model we were able to reproduce the error profile given by the experimental data in Wehner1988 \cite{Wehner1988} almost perfectly.
-
+\\ \\ \\
+\textit{Outlook:}\\
+As it stands the project simulates the ants behaviour while collecting food. During the project we had to make some assumptions and guesses. For future projects it would be possible to look for sources which discuss these assumptions. Also there are some aspects we did not consider in our simulation, for example the ants reaction to skylight polarization. Also not implemented is a proper view range so the ant can’t see 360 degrees. Furthermore our local vector navigation could be improved. \\
+\ \\
+All in all we are happy with the results of this project even if we cannot determine with absolute certainty if our model does hold up for the general case.
 \newpage
 \appendix
 \section{Appendix}
